@@ -1,0 +1,142 @@
+#:import Factory kivy.factory.Factory
+
+<MyPopup@Popup>
+    id: popup_window
+    auto_dismiss: False
+    size_hint: 0.6,0.6
+    title: 'Upload the image'
+
+    BoxLayout:
+        orientation: 'vertical'
+        size: root.width, root.height
+        Image:
+            id: my_image
+            source: ''
+        FileChooserIconView:
+            id: file_chooser
+            on_selection: popup_window.selected(file_chooser.selection)
+        Button:
+            text: 'Close'
+            font_size: 20
+            on_release: root.dismiss()
+
+
+<TabbedPanel>
+    id: tabs
+    size_hint: .99, .99
+    pos_hint: {'center_x': .5, 'center_y': .5}
+    do_default_tab: False
+    tab_pos: 'top_mid'
+    tab_width: 270
+    tab_color: '#A9A9A9'
+
+
+    TabbedPanelItem:
+        text: 'Strip Detection'
+        color: '#FFFFFF'
+        background_color: '#000000'
+
+        BoxLayout:
+            orientation: 'vertical'
+            background_color: '#000000'
+            GridLayout:
+                cols: 2
+                rows: 1
+
+                Label:
+                    text: "Upload your image"
+                    size_hint: 0.7, 0.1
+                    pos_hint: {"left": 0, "top": 1}
+
+                Button:
+                    text: "Upload"
+                    size_hint: 0.3, 0.1
+                    pos_hint: {"right": .8, "top": 1}
+                    on_release: Factory.MyPopup().open()
+
+            Label:
+                text: 'Crop image'
+                size_hint: 1,.5
+
+            Label:
+                text: 'Lines detection'
+                size_hint: 1,.5
+
+            Label:
+                text: 'Number of lines'
+                size_hint: 1,.2
+
+
+    TabbedPanelItem:
+        text: 'Background correction'
+        color: '#FFFFFF'
+        background_color: '#000000'
+
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                id: click_label
+                text: 'Pick the suitable conversion method'
+                size_hint: 1,.1
+            Spinner:
+                id: spinner_id
+                text: 'Conversion method'
+                values: ['Gray', 'Luminance', 'Red', 'Blue']
+                on_text: root.spinner_clicked(spinner_id.text)
+                size_hint: 1,.2
+
+            Label:
+                text: 'Pick the suitable thresholding method'
+                size_hint: 1,.1
+            GridLayout:
+                cols: 2
+                rows: 3
+
+                Label:
+                    text: 'OTSU'
+                CheckBox:
+                    group: 'thresholding methods'
+                    on_active: root.checkbox_clicked(self, self.active, 'OTSU')
+
+                Label:
+                    text: 'BINARY'
+                CheckBox:
+                    group: 'thresholding methods'
+                    on_active: root.checkbox_clicked(self, self.active, 'BINARY')
+
+                Label:
+                    text: 'TOZERO'
+                CheckBox:
+                    group: 'thresholding methods'
+                    on_active: root.checkbox_clicked(self, self.active, 'TOZERO')
+
+
+            Label:
+                id: slider
+                text: 'Choose offset value'
+                size_hint: 1,.1
+            Slider:
+                min: 0
+                max: 50
+                step: 10
+                marks:  {0: '0', 10: '10', 20: '20', 30: '30', 40: '40', 50: '50'}
+                orientation: 'horizontal'
+
+
+    TabbedPanelItem:
+        text: 'Intensity Data'
+        color: '#FFFFFF'
+        background_color: '#000000'
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                text: 'Data Table'
+                size_hint: 1,.8
+            Button:
+                text: 'Download Data'
+                background_color: '#FFFFFF'
+                size_hint: 1,.1
+            Button:
+                text: 'Upload Existing Data'
+                background_color: '#FFFFFF'
+                size_hint: 1,.1
