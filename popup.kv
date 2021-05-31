@@ -1,0 +1,30 @@
+<FileChoosePopup>:
+    id: popup
+    title: 'Upload the image'
+    size_hint: (0.9, 0.9)
+    auto_dismiss: False
+
+    BoxLayout:
+        orientation: 'vertical'
+        Image:
+            id: image
+            source: ""
+        FileChooser:
+            id: filechooser
+            FileChooserIconLayout
+
+        BoxLayout:
+            size_hint: (1, 0.1)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            spacing: 20
+            Button:
+                text: 'Cancel'
+                on_release: root.dismiss()
+            Button:
+                text: 'Crop'
+                on_release: root.mouse_crop()
+            Button:
+                text: 'Upload'
+                on_release: root.load(filechooser.selection)
+                id: ldbtn
+                disabled: True if filechooser.selection == [] else False

@@ -1,0 +1,195 @@
+<Tab>:
+    id: tabs
+    do_default_tab: False
+    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+    size_hint: (0.99, 0.99)
+    tab_pos: 'top_mid'
+    tab_width: 265
+    slide_text: slider
+
+
+##########################################################################
+    # Creating Page 1
+
+
+    TabbedPanelItem:
+        text: 'Strip Detection'
+        color: '#FFFFFF'
+        background_color: '#000000'
+
+        StackLayout:
+            orientation: 'lr-tb'
+            size_hint_y: None
+            height: 30
+            spacing: 0
+            Label:
+                text: ''
+                size_hint_x: 1
+            Label:
+                size_hint: (0.3, 0.5)
+                text: 'Upload your image'
+            TextInput:
+                id: get_file
+                readonly: True
+                size_hint_x: 0.5
+            Button:
+                text: 'Choose File'
+                size_hint_x: 0.15
+                on_press: root.open_popup()
+            Label:
+                text: ''
+                size_hint_x: 1
+
+            Label:
+                text: 'Lines detection'
+                size_hint: (0.3, 0.5)
+            Label:
+                text: ''
+                size_hint_x: 1
+            Image:
+                source: ""
+                size_hint_y: 10
+            Label:
+                text: ''
+                size_hint_x: 1
+
+            Label:
+                text: 'Number of lines'
+                size_hint: (0.3, 0.5)
+            TextInput:
+                id: lines
+                readonly: True
+                size_hint_x: 0.5
+
+
+##########################################################################
+    # Creating Page 2
+
+
+    TabbedPanelItem:
+        text: 'Background correction'
+        color: '#FFFFFF'
+        background_color: '#000000'
+
+
+        StackLayout:
+            orientation: 'lr-tb'
+            size_hint_y: None
+            height: 30
+            spacing: 0
+            Label:
+                text: ''
+                size_hint_x: 1
+            Label:
+                id: click_label
+                text: 'Pick the suitable conversion method'
+                size_hint_x: 0.4
+            Spinner:
+                id: spinner_id
+                text: "Conversion Method"
+                values: ['Gray', 'Luminance', 'Red', 'Green', 'Blue']
+                on_text: root.spinner_clicked(spinner_id.text)
+                size_hint_x: 0.6
+            Label:
+                text: ''
+                size_hint_x: 1
+            Label:
+                text: ''
+                size_hint_x: 1
+            Label:
+                text: ''
+                size_hint_x: 1
+            Label:
+                text: ''
+                size_hint_x: 1
+            Label:
+                text: ''
+                size_hint_x: 1
+            Label:
+                text: ''
+                size_hint_x: 1
+            Label:
+                text: ''
+                size_hint_x: 1
+
+            Label:
+                text: 'Pick the suitable thresholding method'
+                size_hint_x: 0.4
+            GridLayout:
+                size_hint: (0.6, 3)
+                cols: 2
+                rows: 3
+                Label:
+                    text: 'OTSU'
+                    size_hint_x: 1
+                CheckBox:
+                    group: 'thresholding methods'
+                    on_active: root.checkbox_clicked(self, self.active, 'OTSU')
+                Label:
+                    text: 'TOZERO'
+                    size_hint_x: 1
+                CheckBox:
+                    group: 'thresholding methods'
+                    on_active: root.checkbox_clicked(self, self.active, 'TOZERO')
+                Label:
+                    text: 'BINARY'
+                CheckBox:
+                    group: 'thresholding methods'
+                    on_active: root.checkbox_clicked(self, self.active, 'BINARY')
+            Label:
+                text: ''
+                size_hint_x: 1
+            Label:
+                text: ''
+                size_hint_x: 1
+            Label:
+                text: 'Choose offset value'
+                size_hint_x: .3
+            Slider:
+                min: 0
+                max: 50
+                step: 5
+                orientation: 'horizontal'
+                size_hint_x: .7
+                on_value: root.slide_it(*args)
+            Label:
+                id: slider
+                text: '0'
+
+
+##########################################################################
+    # Creating Page 3
+
+
+    TabbedPanelItem:
+        text: 'Intensity Data'
+        color: '#FFFFFF'
+        background_color: '#000000'
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                text: 'Data Table'
+                size_hint: (1, 0.1)
+            GridLayout:
+                cols: 2
+                rows: 2
+
+                Label:
+                    text: 'Mean'
+                    size_hint: (1, 0.1)
+                Label:
+                    text: 'Median'
+                    size_hint: (1, 0.1)
+                TextInput:
+                    id: mean
+                    readonly: True
+                    size_hint_x: 0.5
+                TextInput:
+                    id: median
+                    readonly: True
+                    size_hint_x: 0.5
+
+            Button:
+                text: 'Download the data table'
+                background_color: '#FFFFFF'
+                size_hint: (1, 0.1)
