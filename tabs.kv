@@ -47,6 +47,7 @@
                 text: ''
                 size_hint_x: 1
             Image:
+                id: detected_image
                 source: ""
                 size_hint_y: 10
             Label:
@@ -89,7 +90,10 @@
                 text: "Conversion Method"
                 values: ['Gray', 'Luminance', 'Red', 'Green', 'Blue']
                 on_text: root.spinner_clicked(spinner_id.text)
-                size_hint_x: 0.6
+                size_hint_x: 0.5
+            Label:
+                text: ''
+                size_hint_x: 1
             Label:
                 text: ''
                 size_hint_x: 1
@@ -112,30 +116,42 @@
                 text: ''
                 size_hint_x: 1
 
+
             Label:
                 text: 'Pick the suitable thresholding method'
                 size_hint_x: 0.4
             GridLayout:
-                size_hint: (0.6, 3)
+                size_hint: (0.4, 3)
                 cols: 2
-                rows: 3
+                rows: 5
                 Label:
-                    text: 'OTSU'
+                    text: 'Li'
                     size_hint_x: 1
                 CheckBox:
                     group: 'thresholding methods'
-                    on_active: root.checkbox_clicked(self, self.active, 'OTSU')
+                    on_active: root.checkbox_clicked(self, self.active, 'Li')
                 Label:
-                    text: 'TOZERO'
+                    text: 'Yen'
                     size_hint_x: 1
                 CheckBox:
                     group: 'thresholding methods'
-                    on_active: root.checkbox_clicked(self, self.active, 'TOZERO')
+                    on_active: root.checkbox_clicked(self, self.active, 'Yen')
                 Label:
-                    text: 'BINARY'
+                    text: 'Otsu'
                 CheckBox:
                     group: 'thresholding methods'
-                    on_active: root.checkbox_clicked(self, self.active, 'BINARY')
+                    on_active: root.checkbox_clicked(self, self.active, 'Otsu')
+                Label:
+                    text: 'Isodata'
+                CheckBox:
+                    group: 'thresholding methods'
+                    on_active: root.checkbox_clicked(self, self.active, 'Isodata')
+                Label:
+                    text: 'Triangle'
+                CheckBox:
+                    group: 'thresholding methods'
+                    on_active: root.checkbox_clicked(self, self.active, 'Triangle')
+
             Label:
                 text: ''
                 size_hint_x: 1
@@ -171,23 +187,31 @@
                 text: 'Data Table'
                 size_hint: (1, 0.1)
             GridLayout:
-                cols: 2
-                rows: 2
+                cols: 3
+                rows: 4
 
                 Label:
+                    text: 'Lines'
+                    size_hint: (0.1, 0.1)
+                Label:
                     text: 'Mean'
-                    size_hint: (1, 0.1)
+                    size_hint: (0.3, 0.1)
                 Label:
                     text: 'Median'
-                    size_hint: (1, 0.1)
+                    size_hint: (0.6, 0.1)
+
+                TextInput:
+                    id: line
+                    readonly: True
+                    size_hint: (0.1, 1)
                 TextInput:
                     id: mean
                     readonly: True
-                    size_hint_x: 0.5
+                    size_hint: (0.3, 1)
                 TextInput:
                     id: median
                     readonly: True
-                    size_hint_x: 0.5
+                    size_hint: (0.6, 1)
 
             Button:
                 text: 'Download the data table'
