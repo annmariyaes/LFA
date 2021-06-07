@@ -1,8 +1,10 @@
 import cv2
 import numpy as np
+from PIL import Image
+
 from skimage import io
 from skimage.color import rgb2gray
-
+from skimage.filters import threshold_li, threshold_yen, threshold_otsu, threshold_isodata, threshold_triangle
 
 from kivy.app import App
 from kivy.lang import Builder
@@ -41,9 +43,12 @@ class Tab(TabbedPanel):
         if self.file_path:
             self.ids.get_file.text = self.file_path
 
+        #self.ids.undetected_image.source =
 
         # load the image and into grayscale
         img = cv2.imread(self.file_path)
+
+
 
         # convert image into grayscale
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -59,10 +64,13 @@ class Tab(TabbedPanel):
         for line in lines:
             x1, y1, x2, y2 = line[0]
             cv2.line(img, (x1, y1), (x2, y2), (255, 0, 0), 3)
-        ln = len(lines)/2
+        n = len(lines)/2
         #print(ln)
 
-        self.ids.lines.text = f'{ln}'
+        self.ids.detected_image.source = "C:\LFA\lines0.jpg"
+
+        self.ids.lines.text = f'{n}'
+
 
 
     def spinner_clicked(self, value):
@@ -95,12 +103,26 @@ class Tab(TabbedPanel):
                 thresh = f'{thresh} {x}'
 
                 def thresholdingMethod(thresh):
-                    if thresh == "OTSU":
-                        return cv2.threshold(conversion, 100, 255, cv2.THRESH_OTSU)[1]
-                    elif thresh == "TOZERO":
-                        return cv2.threshold(conversion, 100, 255, cv2.THRESH_TOZERO)[1]
-                    elif thresh == "BINARY":
-                        return cv2.threshold(conversion, 100, 255, cv2.THRESH_BINARY)[1]
+                    if thresh == "Li":
+                        thresh = threshold_li(conversion)
+                        li = conversion > thresh
+                        return li
+                    elif thresh == "Yen":
+                        thresh = threshold_yen(conversion)
+                        yen = conversion > thresh
+                        return yen
+                    if thresh == "Otsu":
+                        thresh = threshold_otsu(conversion)
+                        otsu = conversion > thresh
+                        return otsu
+                    elif thresh == "Isodata":
+                        thresh = threshold_isodata(conversion)
+                        isodata = conversion > thresh
+                        return isodata
+                    elif thresh == "Triangle":
+                        thresh = threshold_triangle(conversion)
+                        triangle = conversion > thresh
+                        return triangle
                     else:
                         print("Invalid input!")
 
@@ -143,10 +165,11 @@ class Tab(TabbedPanel):
                 m2 = np.median(points)
                 mean.append(m1)
                 median.append(m2)
-        #print("Median of the", n, "lines:", median)
-        #print("Mean of the", n, "lines:", mean)
-        self.ids.mean.text = f'{mean}'
-        self.ids.median.text = f'{median}'
+            #print(mean[0])
+            #print(median[0])
+        self.ids.line.text = f'{n}'
+        self.ids.mean.text = f'{median}'
+        self.ids.median.text = f'{mean}'
 
 
 
