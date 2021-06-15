@@ -1,3 +1,4 @@
+
 <Tab>:
     id: tabs
     do_default_tab: False
@@ -48,7 +49,7 @@
                 size_hint_x: 1
             Image:
                 id: detected_image
-                source: ""
+                source: '<random_name>.jpg'
                 size_hint_y: 10
             Label:
                 text: ''
@@ -182,7 +183,7 @@
         color: '#FFFFFF'
         background_color: '#000000'
         BoxLayout:
-            orientation: 'vertical'
+            orientation: "vertical"
             Label:
                 text: 'Data Table'
                 size_hint: (1, 0.1)
@@ -205,15 +206,17 @@
                     readonly: True
                     size_hint: (0.1, 1)
                 TextInput:
-                    id: mean
+                    id: median
                     readonly: True
                     size_hint: (0.3, 1)
                 TextInput:
-                    id: median
+                    id: mean
                     readonly: True
                     size_hint: (0.6, 1)
 
             Button:
+                id: download_datatable
                 text: 'Download the data table'
                 background_color: '#FFFFFF'
                 size_hint: (1, 0.1)
+                on_release: root.download()

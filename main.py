@@ -1,4 +1,5 @@
 import cv2
+import csv
 import numpy as np
 from PIL import Image
 
@@ -12,13 +13,22 @@ from kivy.uix.popup import Popup
 from kivy.core.window import Window
 from kivy.utils import get_color_from_hex
 from kivy.uix.tabbedpanel import TabbedPanel
+from kivy.core.image import Image as CoreImage
+from kivy.uix.anchorlayout import AnchorLayout
 from kivy.properties import ObjectProperty, StringProperty
+
+from kivy.metrics import dp
+from kivymd.app import MDApp
+from kivymd.uix.screen import Screen
+from kivymd.uix.datatables import MDDataTable
+
 
 
 Builder.load_file('popup.kv')
 Builder.load_file('tabs.kv')
 
 Window.clearcolor = get_color_from_hex("#808080")
+
 
 class FileChoosePopup(Popup):
     load = ObjectProperty()
@@ -29,24 +39,36 @@ class Tab(TabbedPanel):
     the_popup = ObjectProperty(None)
 
 
+
     def open_popup(self):
         self.the_popup = FileChoosePopup(load=self.load)
         self.the_popup.open()
 
 
+
     def load(self, selection):
-        global img, lines
+        global img, lines, img1
         self.file_path = str(selection[0])
         self.the_popup.dismiss()
         #print(self.file_path)
+
+        #self.ids.undetected_image.source = self.file_path
+
+
         # check for non-empty list i.e, file selected
         if self.file_path:
             self.ids.get_file.text = self.file_path
 
-        #self.ids.undetected_image.source =
+            # load the image and into grayscale
+            img = cv2.imread(self.file_path)
 
-        # load the image and into grayscale
-        img = cv2.imread(self.file_path)
+            #print(type(img))
+
+
+
+    #cropping code
+    #def cropping(self, selection):
+        #pass
 
 
 
@@ -67,7 +89,11 @@ class Tab(TabbedPanel):
         n = len(lines)/2
         #print(ln)
 
-        self.ids.detected_image.source = "C:\LFA\lines0.jpg"
+
+        #img1 = np.array2string(img)
+        #print(type(img1))
+        #self.ids.detected_image.source = img1
+        self.ids.detected_image.source = self.file_path
 
         self.ids.lines.text = f'{n}'
 
@@ -91,6 +117,7 @@ class Tab(TabbedPanel):
         conv = value
         conversion = conversionMethod(conv)
         pass
+
 
 
     checks = []
@@ -139,6 +166,7 @@ class Tab(TabbedPanel):
             pass
 
 
+
     def slide_it(self, *args):
         global l,s
 
@@ -165,12 +193,26 @@ class Tab(TabbedPanel):
                 m2 = np.median(points)
                 mean.append(m1)
                 median.append(m2)
-            #print(mean[0])
-            #print(median[0])
-        self.ids.line.text = f'{n}'
-        self.ids.mean.text = f'{median}'
-        self.ids.median.text = f'{mean}'
+        #print("Median of the", n, "lines:", median)
+        #print("Mean of the", n, "lines:", mean)
 
+        self.ids.line.text = f'{n}'
+        self.ids.median.text = f'{median}'
+        self.ids.mean.text = f'{mean}'
+
+
+
+    #def download(self, *args):
+        # stores values of first image
+        #with open("C:\\Users\\annma\\OneDrive\\Desktop\\Assay Project\\Data Table.csv", 'w') as csvfile:
+            #csvwriter = csv.writer(csvfile)
+            #csvwriter.writerow(["Median", "Mean"])
+            #csvwriter.writerows([p for p in zip(median, mean)])
+
+        # stores values from second image
+        #with open("C:\\Users\\annma\\OneDrive\\Desktop\\Assay Project\\Data Table.csv", 'a+') as appendobj:
+            #csvappend = csv.writer(appendobj)
+            #csvappend.writerows([p for p in zip(median, mean)])
 
 
 class Assays(App):
@@ -180,6 +222,8 @@ class Assays(App):
 
 if __name__ == '__main__':
     Assays().run()
+
+
 
 
 

@@ -6,12 +6,11 @@
 
     BoxLayout:
         orientation: 'vertical'
-        Image:
-            id: image
-            source: ""
+
         FileChooser:
-            id: filechooser
+            id: file_chooser
             FileChooserIconLayout
+
 
         BoxLayout:
             size_hint: (1, 0.1)
@@ -22,9 +21,9 @@
                 on_release: root.dismiss()
             Button:
                 text: 'Crop'
-                on_release: root.mouse_crop()
+                on_release: root.cropping()
             Button:
                 text: 'Upload'
-                on_release: root.load(filechooser.selection)
+                on_release: root.load(file_chooser.selection)
                 id: ldbtn
-                disabled: True if filechooser.selection == [] else False
+                disabled: True if file_chooser.selection == [] else False
