@@ -1,7 +1,8 @@
 import cv2
 import csv
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw
+from matplotlib import cm
 
 from skimage import io
 from skimage.color import rgb2gray
@@ -54,24 +55,35 @@ class Tab(TabbedPanel):
 
         #self.ids.undetected_image.source = self.file_path
 
-
         # check for non-empty list i.e, file selected
         if self.file_path:
             self.ids.get_file.text = self.file_path
 
             # load the image and into grayscale
             img = cv2.imread(self.file_path)
-
             #print(type(img))
 
 
 
-    #cropping code
-    #def cropping(self, selection):
-        #pass
+    # image cropping
+    def mouse_crop(self):
+        global imgCrop
+        print("Button is pressed")
+        print(img.shape)
+        # Select ROI
+        roi = cv2.selectROI(img)
+        print(roi)
+        # Crop image
+        imgCrop = img[int(roi[1]):int(roi[1] + roi[3]), int(roi[0]):int(roi[0] + roi[2])]
+        print(type(imgCrop))
+        cv2.imshow("Image", imgCrop)
+        cv2.waitKey(0)
 
 
 
+    def detect_lines(self):
+        global lines
+        print("button pressed")
         # convert image into grayscale
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -89,7 +101,6 @@ class Tab(TabbedPanel):
         n = len(lines)/2
         #print(ln)
 
-
         #img1 = np.array2string(img)
         #print(type(img1))
         #self.ids.detected_image.source = img1
@@ -101,17 +112,65 @@ class Tab(TabbedPanel):
 
     def spinner_clicked(self, value):
         global conversion
+
         def conversionMethod(conv):
             if conv == "Gray":
+                print(type(img))
                 return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+
             elif conv == "Luminance":
                 return rgb2gray(img)
+
             elif conv == "Red":
-                print("its red!")
+                print("Hi")
+                pil_img = None
+                np_img = None
+                luminosity = 100
+                # Load image
+                pil_img = Image.fromarray(img)
+                input_pixels = pil_img.load()
+                # Create output image
+                output_image = Image.new("RGB", pil_img.size)
+                draw = ImageDraw.Draw(output_image)
+                # Generate image
+                for x in range(output_image.width):
+                    for y in range(output_image.height):
+                        r, g, b = input_pixels[x, y]
+                        r = int(r + luminosity)
+                        draw.point((x, y), (r, g, b))
+                        np_img = np.array(output_image)
+                print(type(output_image))
+                return np_img
+
             elif conv == "Green":
-                print("its green!")
+                np_img = []
+                pil_img = Image.fromarray(img)
+                width, height = pil_img.size
+                for i in range(width):
+                    for j in range(height):
+                        pixel = pil_img.getpixel((i, j))
+                        red = pixel[0]
+                        green = pixel[1]
+                        blue = pixel[2]
+                        newpixel = pil_img.putpixel((i, j), (red, green*2, blue))
+                        np_img = np.array(newpixel)
+                return np_img
+
             elif conv == "Blue":
-                print("its blue!")
+                np_img = []
+                pil_img = Image.fromarray(img)
+                width, height = pil_img.size
+                for i in range(width):
+                    for j in range(height):
+                        pixel = pil_img.getpixel((i, j))
+                        red = pixel[0]
+                        green = pixel[1]
+                        blue = pixel[2]
+                        newpixel = pil_img.putpixel((i, j), (red, green, blue*2))
+                        np_img = np.array(newpixel)
+                return np_img
+
             else:
                 print("Invalid input!")
         conv = value
@@ -120,6 +179,7 @@ class Tab(TabbedPanel):
 
 
 
+    #np_img = np.array(il_img)
     checks = []
     def checkbox_clicked(self, instance, value, threshold):
 
@@ -134,22 +194,27 @@ class Tab(TabbedPanel):
                         thresh = threshold_li(conversion)
                         li = conversion > thresh
                         return li
+
                     elif thresh == "Yen":
                         thresh = threshold_yen(conversion)
                         yen = conversion > thresh
                         return yen
+
                     if thresh == "Otsu":
                         thresh = threshold_otsu(conversion)
                         otsu = conversion > thresh
                         return otsu
+
                     elif thresh == "Isodata":
                         thresh = threshold_isodata(conversion)
                         isodata = conversion > thresh
                         return isodata
+
                     elif thresh == "Triangle":
                         thresh = threshold_triangle(conversion)
                         triangle = conversion > thresh
                         return triangle
+
                     else:
                         print("Invalid input!")
 
@@ -196,9 +261,15 @@ class Tab(TabbedPanel):
         #print("Median of the", n, "lines:", median)
         #print("Mean of the", n, "lines:", mean)
 
-        self.ids.line.text = f'{n}'
-        self.ids.median.text = f'{median}'
-        self.ids.mean.text = f'{mean}'
+        self.ids.line0.text = f'{1}'
+        self.ids.median0.text = f'{median[0]}'
+        self.ids.mean0.text = f'{mean[0]}'
+        self.ids.line1.text = f'{2}'
+        self.ids.median1.text = f'{median[1]}'
+        self.ids.mean1.text = f'{mean[1]}'
+        self.ids.line2.text = f'{3}'
+        self.ids.median2.text = f'{median[2]}'
+        self.ids.mean2.text = f'{mean[2]}'
 
 
 

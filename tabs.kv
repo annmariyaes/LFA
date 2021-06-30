@@ -1,4 +1,3 @@
-
 <Tab>:
     id: tabs
     do_default_tab: False
@@ -41,9 +40,28 @@
                 text: ''
                 size_hint_x: 1
 
+
+            Label:
+                text: 'Crop the image'
+                size_hint: (0.3, 0.5)
+            Button:
+                id: crops
+                text: 'Apply cropping'
+                size_hint: 0.3, 0.3
+                on_press: root.mouse_crop()
+            Label:
+                text: ''
+                size_hint_x: 1
+
+
             Label:
                 text: 'Lines detection'
                 size_hint: (0.3, 0.5)
+            Button:
+                id: detection
+                text: 'Apply detection'
+                size_hint: 0.3, 0.3
+                on_press: root.detect_lines()
             Label:
                 text: ''
                 size_hint_x: 1
@@ -54,6 +72,7 @@
             Label:
                 text: ''
                 size_hint_x: 1
+
 
             Label:
                 text: 'Number of lines'
@@ -189,7 +208,7 @@
                 size_hint: (1, 0.1)
             GridLayout:
                 cols: 3
-                rows: 4
+                rows: 11
 
                 Label:
                     text: 'Lines'
@@ -200,19 +219,127 @@
                 Label:
                     text: 'Median'
                     size_hint: (0.6, 0.1)
-
+                TextInput:
+                    id: line0
+                    readonly: True
+                    size_hint: (0.1, 0.1)
+                TextInput:
+                    id: median0
+                    readonly: True
+                    size_hint: (0.3, 0.1)
+                TextInput:
+                    id: mean0
+                    readonly: True
+                    size_hint: (0.6, 0.1)
+                TextInput:
+                    id: line1
+                    readonly: True
+                    size_hint: (0.1, 0.1)
+                TextInput:
+                    id: median1
+                    readonly: True
+                    size_hint: (0.3, 0.1)
+                TextInput:
+                    id: mean1
+                    readonly: True
+                    size_hint: (0.6, 0.1)
+                TextInput:
+                    id: line2
+                    readonly: True
+                    size_hint: (0.1, 0.1)
+                TextInput:
+                    id: median2
+                    readonly: True
+                    size_hint: (0.3, 0.1)
+                TextInput:
+                    id: mean2
+                    readonly: True
+                    size_hint: (0.6, 0.1)
                 TextInput:
                     id: line
                     readonly: True
-                    size_hint: (0.1, 1)
+                    size_hint: (0.1, 0.1)
                 TextInput:
                     id: median
                     readonly: True
-                    size_hint: (0.3, 1)
+                    size_hint: (0.3, 0.1)
                 TextInput:
                     id: mean
                     readonly: True
-                    size_hint: (0.6, 1)
+                    size_hint: (0.6, 0.1)
+                TextInput:
+                    id: line
+                    readonly: True
+                    size_hint: (0.1, 0.1)
+                TextInput:
+                    id: median
+                    readonly: True
+                    size_hint: (0.3, 0.1)
+                TextInput:
+                    id: mean
+                    readonly: True
+                    size_hint: (0.6, 0.1)
+                TextInput:
+                    id: line
+                    readonly: True
+                    size_hint: (0.1, 0.1)
+                TextInput:
+                    id: median
+                    readonly: True
+                    size_hint: (0.3, 0.1)
+                TextInput:
+                    id: mean
+                    readonly: True
+                    size_hint: (0.6, 0.1)
+                TextInput:
+                    id: line
+                    readonly: True
+                    size_hint: (0.1, 0.1)
+                TextInput:
+                    id: median
+                    readonly: True
+                    size_hint: (0.3, 0.1)
+                TextInput:
+                    id: mean
+                    readonly: True
+                    size_hint: (0.6, 0.1)
+                TextInput:
+                    id: line
+                    readonly: True
+                    size_hint: (0.1, 0.1)
+                TextInput:
+                    id: median
+                    readonly: True
+                    size_hint: (0.3, 0.1)
+                TextInput:
+                    id: mean
+                    readonly: True
+                    size_hint: (0.6, 0.1)
+                TextInput:
+                    id: line
+                    readonly: True
+                    size_hint: (0.1, 0.1)
+                TextInput:
+                    id: median
+                    readonly: True
+                    size_hint: (0.3, 0.1)
+                TextInput:
+                    id: mean
+                    readonly: True
+                    size_hint: (0.6, 0.1)
+                TextInput:
+                    id: line
+                    readonly: True
+                    size_hint: (0.1, 0.1)
+                TextInput:
+                    id: median
+                    readonly: True
+                    size_hint: (0.3, 0.1)
+                TextInput:
+                    id: mean
+                    readonly: True
+                    size_hint: (0.6, 0.1)
+
 
             Button:
                 id: download_datatable
