@@ -2,9 +2,7 @@ import cv2
 import csv
 import numpy as np
 from PIL import Image, ImageDraw
-from matplotlib import cm
 
-from skimage import io
 from skimage.color import rgb2gray
 from skimage.filters import threshold_li, threshold_yen, threshold_otsu, threshold_isodata, threshold_triangle
 
@@ -14,14 +12,18 @@ from kivy.uix.popup import Popup
 from kivy.core.window import Window
 from kivy.utils import get_color_from_hex
 from kivy.uix.tabbedpanel import TabbedPanel
-from kivy.core.image import Image as CoreImage
-from kivy.uix.anchorlayout import AnchorLayout
 from kivy.properties import ObjectProperty, StringProperty
 
+
+
+from skimage import io
+from matplotlib import cm
 from kivy.metrics import dp
 from kivymd.app import MDApp
 from kivymd.uix.screen import Screen
 from kivymd.uix.datatables import MDDataTable
+from kivy.core.image import Image as CoreImage
+from kivy.uix.anchorlayout import AnchorLayout
 
 
 
@@ -52,7 +54,6 @@ class Tab(TabbedPanel):
         self.file_path = str(selection[0])
         self.the_popup.dismiss()
         #print(self.file_path)
-
         #self.ids.undetected_image.source = self.file_path
 
         # check for non-empty list i.e, file selected
@@ -67,14 +68,15 @@ class Tab(TabbedPanel):
 
     # image cropping
     def mouse_crop(self):
-        global imgCrop
+        global imgCrop, imgResize
         print("Button is pressed")
-        print(img.shape)
+        #print(img.shape)
         # Select ROI
-        roi = cv2.selectROI(img)
+        imgResize = cv2.resize(img, (2500, 1500))
+        roi = cv2.selectROI(imgResize)
         print(roi)
         # Crop image
-        imgCrop = img[int(roi[1]):int(roi[1] + roi[3]), int(roi[0]):int(roi[0] + roi[2])]
+        imgCrop = imgResize[int(roi[1]):int(roi[1] + roi[3]), int(roi[0]):int(roi[0] + roi[2])]
         print(type(imgCrop))
         cv2.imshow("Image", imgCrop)
         cv2.waitKey(0)
@@ -85,7 +87,7 @@ class Tab(TabbedPanel):
         global lines, nlines
         print("button pressed")
         # convert image into grayscale
-        gray = cv2.cvtColor(imgCrop, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         # threshold the image to reveal white regions in the image
         thresh = cv2.threshold(gray, 100, 255, cv2.THRESH_OTSU)[1]
@@ -133,19 +135,18 @@ class Tab(TabbedPanel):
                 pil_img = Image.fromarray(img)
                 input_pixels = pil_img.load()
                 # Create an output image
-                output_image = Image.new("RGB", pil_img.size)
-                draw = ImageDraw.Draw(output_image)
+                output_img = Image.new("RGB", pil_img.size)
+                draw = ImageDraw.Draw(output_img)
                 # Generate image
-                for x in range(output_image.width):
-                    for y in range(output_image.height):
+                for x in range(output_img.width):
+                    for y in range(output_img.height):
                         r, g, b = input_pixels[x, y]
                         r = int(r + luminosity)
                         g, b = 0, 0
                         draw.point((x, y), (r, g, b))
                         # Convert the pillow image to numpy array
-                        np_img = np.array(output_image)
-                # print(type(output_image))
-                return np_img
+                        np_img = np.array(output_img)
+                        return np_img
 
             elif conv == "Green":
                 print("Hihi")
@@ -156,19 +157,18 @@ class Tab(TabbedPanel):
                 pil_img = Image.fromarray(img)
                 input_pixels = pil_img.load()
                 # Create an output image
-                output_image = Image.new("RGB", pil_img.size)
-                draw = ImageDraw.Draw(output_image)
+                output_img = Image.new("RGB", pil_img.size)
+                draw = ImageDraw.Draw(output_img)
                 # Generate image
-                for x in range(output_image.width):
-                    for y in range(output_image.height):
+                for x in range(output_img.width):
+                    for y in range(output_img.height):
                         r, g, b = input_pixels[x, y]
                         g = int(g + luminosity)
                         r, b = 0, 0
                         draw.point((x, y), (r, g, b))
                         # Convert the pillow image to numpy array
-                        np_img = np.array(output_image)
-                # print(type(output_image))
-                return np_img
+                        np_img = np.array(output_img)
+                        return np_img
 
             elif conv == "Blue":
                 print("Hihihi")
@@ -178,19 +178,18 @@ class Tab(TabbedPanel):
                 pil_img = Image.fromarray(img)
                 input_pixels = pil_img.load()
                 # Create an output image
-                output_image = Image.new("RGB", pil_img.size)
-                draw = ImageDraw.Draw(output_image)
+                output_img = Image.new("RGB", pil_img.size)
+                draw = ImageDraw.Draw(output_img)
                 # Generate image
-                for x in range(output_image.width):
-                    for y in range(output_image.height):
+                for x in range(output_img.width):
+                    for y in range(output_img.height):
                         r, g, b = input_pixels[x, y]
                         b = int(b + luminosity)
                         r, g = 0, 0
                         draw.point((x, y), (r, g, b))
                         # Convert the pillow image to numpy array
-                        np_img = np.array(output_image)
-                # print(type(output_image))
-                return np_img
+                        np_img = np.array(output_img)
+                        return np_img
 
             else:
                 print("Invalid input!")
@@ -254,7 +253,7 @@ class Tab(TabbedPanel):
 
 
     def slide_it(self, *args):
-        global l,s
+        global l,s, mean, median
 
         self.slide_text.text = str(int(args[1]))
         offset = int(args[1])
@@ -294,12 +293,12 @@ class Tab(TabbedPanel):
 
 
 
-    #def download(self, *args):
+    def download(self, *args):
         # stores values of first image
-        #with open("C:\\Users\\annma\\OneDrive\\Desktop\\Assay Project\\Data Table.csv", 'w') as csvfile:
-            #csvwriter = csv.writer(csvfile)
-            #csvwriter.writerow(["Median", "Mean"])
-            #csvwriter.writerows([p for p in zip(median, mean)])
+        with open("C:\\Users\\annma\\OneDrive\\Desktop\\Assay Project\\Data Table.csv", 'w') as csvfile:
+            csvwriter = csv.writer(csvfile)
+            csvwriter.writerow(["Median", "Mean"])
+            csvwriter.writerows([p for p in zip(median, mean)])
 
         # stores values from second image
         #with open("C:\\Users\\annma\\OneDrive\\Desktop\\Assay Project\\Data Table.csv", 'a+') as appendobj:
