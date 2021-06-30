@@ -82,10 +82,10 @@ class Tab(TabbedPanel):
 
 
     def detect_lines(self):
-        global lines
+        global lines, nlines
         print("button pressed")
         # convert image into grayscale
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(imgCrop, cv2.COLOR_BGR2GRAY)
 
         # threshold the image to reveal white regions in the image
         thresh = cv2.threshold(gray, 100, 255, cv2.THRESH_OTSU)[1]
@@ -98,14 +98,16 @@ class Tab(TabbedPanel):
         for line in lines:
             x1, y1, x2, y2 = line[0]
             cv2.line(img, (x1, y1), (x2, y2), (255, 0, 0), 3)
-        n = len(lines)/2
-        #print(ln)
+        nlines = len(lines)/2
 
-        #img1 = np.array2string(img)
-        #print(type(img1))
-        #self.ids.detected_image.source = img1
-        self.ids.detected_image.source = self.file_path
+        # Display of detected image
+        cv2.imwrite('detected_image.jpg', img)
+        self.ids.detected_image.source = 'detected_image.jpg'
+        # Display of number of lines in the detected image
 
+        # only integer values are allowed to be the number of lines
+        n = int(nlines)
+        # print(type(nlines))
         self.ids.lines.text = f'{n}'
 
 
@@ -124,13 +126,13 @@ class Tab(TabbedPanel):
 
             elif conv == "Red":
                 print("Hi")
-                pil_img = None
+                # pil_img = None
                 np_img = None
-                luminosity = 100
-                # Load image
+                luminosity = 50
+                # Load the pillow image from numpy array
                 pil_img = Image.fromarray(img)
                 input_pixels = pil_img.load()
-                # Create output image
+                # Create an output image
                 output_image = Image.new("RGB", pil_img.size)
                 draw = ImageDraw.Draw(output_image)
                 # Generate image
@@ -138,37 +140,56 @@ class Tab(TabbedPanel):
                     for y in range(output_image.height):
                         r, g, b = input_pixels[x, y]
                         r = int(r + luminosity)
+                        g, b = 0, 0
                         draw.point((x, y), (r, g, b))
+                        # Convert the pillow image to numpy array
                         np_img = np.array(output_image)
-                print(type(output_image))
+                # print(type(output_image))
                 return np_img
 
             elif conv == "Green":
-                np_img = []
+                print("Hihi")
+                pil_img = None
+                np_img = None
+                luminosity = 50
+                # Load the pillow image from numpy array
                 pil_img = Image.fromarray(img)
-                width, height = pil_img.size
-                for i in range(width):
-                    for j in range(height):
-                        pixel = pil_img.getpixel((i, j))
-                        red = pixel[0]
-                        green = pixel[1]
-                        blue = pixel[2]
-                        newpixel = pil_img.putpixel((i, j), (red, green*2, blue))
-                        np_img = np.array(newpixel)
+                input_pixels = pil_img.load()
+                # Create an output image
+                output_image = Image.new("RGB", pil_img.size)
+                draw = ImageDraw.Draw(output_image)
+                # Generate image
+                for x in range(output_image.width):
+                    for y in range(output_image.height):
+                        r, g, b = input_pixels[x, y]
+                        g = int(g + luminosity)
+                        r, b = 0, 0
+                        draw.point((x, y), (r, g, b))
+                        # Convert the pillow image to numpy array
+                        np_img = np.array(output_image)
+                # print(type(output_image))
                 return np_img
 
             elif conv == "Blue":
-                np_img = []
+                print("Hihihi")
+                np_img = None
+                luminosity = 50
+                # Load the pillow image from numpy array
                 pil_img = Image.fromarray(img)
-                width, height = pil_img.size
-                for i in range(width):
-                    for j in range(height):
-                        pixel = pil_img.getpixel((i, j))
-                        red = pixel[0]
-                        green = pixel[1]
-                        blue = pixel[2]
-                        newpixel = pil_img.putpixel((i, j), (red, green, blue*2))
-                        np_img = np.array(newpixel)
+                input_pixels = pil_img.load()
+                # Create an output image
+                output_image = Image.new("RGB", pil_img.size)
+                draw = ImageDraw.Draw(output_image)
+                # Generate image
+                for x in range(output_image.width):
+                    for y in range(output_image.height):
+                        r, g, b = input_pixels[x, y]
+                        b = int(b + luminosity)
+                        r, g = 0, 0
+                        draw.point((x, y), (r, g, b))
+                        # Convert the pillow image to numpy array
+                        np_img = np.array(output_image)
+                # print(type(output_image))
                 return np_img
 
             else:
