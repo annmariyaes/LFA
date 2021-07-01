@@ -15,7 +15,6 @@ from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.properties import ObjectProperty, StringProperty
 
 
-
 from skimage import io
 from matplotlib import cm
 from kivy.metrics import dp
@@ -87,7 +86,7 @@ class Tab(TabbedPanel):
         global lines, nlines
         print("button pressed")
         # convert image into grayscale
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(imgCrop, cv2.COLOR_BGR2GRAY)
 
         # threshold the image to reveal white regions in the image
         thresh = cv2.threshold(gray, 100, 255, cv2.THRESH_OTSU)[1]
@@ -99,11 +98,11 @@ class Tab(TabbedPanel):
         lines = cv2.HoughLinesP(edges, 1, np.pi / 180, 50, minLineLength=50, maxLineGap=100)
         for line in lines:
             x1, y1, x2, y2 = line[0]
-            cv2.line(img, (x1, y1), (x2, y2), (255, 0, 0), 3)
+            cv2.line(imgCrop, (x1, y1), (x2, y2), (255, 0, 0), 3)
         nlines = len(lines)/2
 
         # Display of detected image
-        cv2.imwrite('detected_image.jpg', img)
+        cv2.imwrite('detected_image.jpg', imgCrop)
         self.ids.detected_image.source = 'detected_image.jpg'
         # Display of number of lines in the detected image
 
@@ -122,74 +121,56 @@ class Tab(TabbedPanel):
                 print(type(img))
                 return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-
             elif conv == "Luminance":
                 return rgb2gray(img)
 
             elif conv == "Red":
                 print("Hi")
-                # pil_img = None
-                np_img = None
-                luminosity = 50
-                # Load the pillow image from numpy array
-                pil_img = Image.fromarray(img)
-                input_pixels = pil_img.load()
-                # Create an output image
-                output_img = Image.new("RGB", pil_img.size)
-                draw = ImageDraw.Draw(output_img)
-                # Generate image
-                for x in range(output_img.width):
-                    for y in range(output_img.height):
-                        r, g, b = input_pixels[x, y]
-                        r = int(r + luminosity)
-                        g, b = 0, 0
-                        draw.point((x, y), (r, g, b))
-                        # Convert the pillow image to numpy array
-                        np_img = np.array(output_img)
-                        return np_img
+                pil_img = Image.fromarray(img).convert('RGB')
+                # Split into 3 channels
+                r, g, b = pil_img.split()
+                # Increase Reds
+                r = r.point(lambda i: i * 1.2)
+                # Decrease Greens
+                g = g.point(lambda i: i * 0.9)
+                # Decrease Blues
+                b = b.point(lambda i: i * 0.9)
+                # Recombine back to RGB image
+                result = Image.merge('RGB', (r, g, b))
+                np_img = np.array(result)
+                return np_img
 
             elif conv == "Green":
                 print("Hihi")
-                pil_img = None
-                np_img = None
-                luminosity = 50
-                # Load the pillow image from numpy array
-                pil_img = Image.fromarray(img)
-                input_pixels = pil_img.load()
-                # Create an output image
-                output_img = Image.new("RGB", pil_img.size)
-                draw = ImageDraw.Draw(output_img)
-                # Generate image
-                for x in range(output_img.width):
-                    for y in range(output_img.height):
-                        r, g, b = input_pixels[x, y]
-                        g = int(g + luminosity)
-                        r, b = 0, 0
-                        draw.point((x, y), (r, g, b))
-                        # Convert the pillow image to numpy array
-                        np_img = np.array(output_img)
-                        return np_img
+                pil_img = Image.fromarray(img).convert('RGB')
+                # Split into 3 channels
+                r, g, b = pil_img.split()
+                # Decrease Reds
+                r = r.point(lambda i: i * 0.9)
+                # Increase Greens
+                g = g.point(lambda i: i * 1.2)
+                # Decrease Blues
+                b = b.point(lambda i: i * 0.9)
+                # Recombine back to RGB image
+                result = Image.merge('RGB', (r, g, b))
+                np_img = np.array(result)
+                return np_img
 
             elif conv == "Blue":
                 print("Hihihi")
-                np_img = None
-                luminosity = 50
-                # Load the pillow image from numpy array
-                pil_img = Image.fromarray(img)
-                input_pixels = pil_img.load()
-                # Create an output image
-                output_img = Image.new("RGB", pil_img.size)
-                draw = ImageDraw.Draw(output_img)
-                # Generate image
-                for x in range(output_img.width):
-                    for y in range(output_img.height):
-                        r, g, b = input_pixels[x, y]
-                        b = int(b + luminosity)
-                        r, g = 0, 0
-                        draw.point((x, y), (r, g, b))
-                        # Convert the pillow image to numpy array
-                        np_img = np.array(output_img)
-                        return np_img
+                pil_img = Image.fromarray(img).convert('RGB')
+                # Split into 3 channels
+                r, g, b = pil_img.split()
+                # Decrease Reds
+                r = r.point(lambda i: i * 0.9)
+                # Decrease Greens
+                g = g.point(lambda i: i * 0.9)
+                # Increase Blues
+                b = b.point(lambda i: i * 1.2)
+                # Recombine back to RGB image
+                result = Image.merge('RGB', (r, g, b))
+                np_img = np.array(result)
+                return np_img
 
             else:
                 print("Invalid input!")
@@ -270,7 +251,7 @@ class Tab(TabbedPanel):
         for i in range(0, len(s)):
             if (i % 2 == 0):
                 # accessing the pixel values by its row and columns
-                points = img[((s[i][1]) - offset):((s[i + 1][3]) + offset), s[i][0]:s[i + 1][2]]  # points = img1[y1:y2, x1:x2] Eg:[168:190, 16:148]
+                points = imgCrop[((s[i][1]) - offset):((s[i + 1][3]) + offset), s[i][0]:s[i + 1][2]]  # points = img1[y1:y2, x1:x2] Eg:[168:190, 16:148]
 
                 # Their respective median and mean
                 n = (len(s)) / 2
@@ -313,8 +294,3 @@ class Assays(App):
 
 if __name__ == '__main__':
     Assays().run()
-
-
-
-
-
