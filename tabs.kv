@@ -181,10 +181,10 @@
             Label:
                 text: 'Choose offset value'
                 size_hint_x: .3
-            Slider:
+            MDSlider:
                 min: 0
                 max: 50
-                step: 5
+                value: 20
                 orientation: 'horizontal'
                 size_hint_x: .7
                 on_value: root.slide_it(*args)
