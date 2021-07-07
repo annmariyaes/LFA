@@ -6,6 +6,8 @@
     tab_pos: 'top_mid'
     tab_width: 265
     slide_text: slider
+    MDProgressBar:
+        value: 50
 
 
 ##########################################################################
@@ -203,143 +205,14 @@
         background_color: '#000000'
         BoxLayout:
             orientation: "vertical"
-            Label:
-                text: 'Data Table'
+            Button:
+                text: 'Datatable'
+                background_color: '#FFFFFF'
                 size_hint: (1, 0.1)
-            GridLayout:
-                cols: 3
-                rows: 11
+                on_release: root.datatable()
 
-                Label:
-                    text: 'Lines'
-                    size_hint: (0.1, 0.1)
-                Label:
-                    text: 'Mean'
-                    size_hint: (0.3, 0.1)
-                Label:
-                    text: 'Median'
-                    size_hint: (0.6, 0.1)
-                TextInput:
-                    id: line0
-                    readonly: True
-                    size_hint: (0.1, 0.1)
-                TextInput:
-                    id: median0
-                    readonly: True
-                    size_hint: (0.3, 0.1)
-                TextInput:
-                    id: mean0
-                    readonly: True
-                    size_hint: (0.6, 0.1)
-                TextInput:
-                    id: line1
-                    readonly: True
-                    size_hint: (0.1, 0.1)
-                TextInput:
-                    id: median1
-                    readonly: True
-                    size_hint: (0.3, 0.1)
-                TextInput:
-                    id: mean1
-                    readonly: True
-                    size_hint: (0.6, 0.1)
-                TextInput:
-                    id: line2
-                    readonly: True
-                    size_hint: (0.1, 0.1)
-                TextInput:
-                    id: median2
-                    readonly: True
-                    size_hint: (0.3, 0.1)
-                TextInput:
-                    id: mean2
-                    readonly: True
-                    size_hint: (0.6, 0.1)
-                TextInput:
-                    id: line
-                    readonly: True
-                    size_hint: (0.1, 0.1)
-                TextInput:
-                    id: median
-                    readonly: True
-                    size_hint: (0.3, 0.1)
-                TextInput:
-                    id: mean
-                    readonly: True
-                    size_hint: (0.6, 0.1)
-                TextInput:
-                    id: line
-                    readonly: True
-                    size_hint: (0.1, 0.1)
-                TextInput:
-                    id: median
-                    readonly: True
-                    size_hint: (0.3, 0.1)
-                TextInput:
-                    id: mean
-                    readonly: True
-                    size_hint: (0.6, 0.1)
-                TextInput:
-                    id: line
-                    readonly: True
-                    size_hint: (0.1, 0.1)
-                TextInput:
-                    id: median
-                    readonly: True
-                    size_hint: (0.3, 0.1)
-                TextInput:
-                    id: mean
-                    readonly: True
-                    size_hint: (0.6, 0.1)
-                TextInput:
-                    id: line
-                    readonly: True
-                    size_hint: (0.1, 0.1)
-                TextInput:
-                    id: median
-                    readonly: True
-                    size_hint: (0.3, 0.1)
-                TextInput:
-                    id: mean
-                    readonly: True
-                    size_hint: (0.6, 0.1)
-                TextInput:
-                    id: line
-                    readonly: True
-                    size_hint: (0.1, 0.1)
-                TextInput:
-                    id: median
-                    readonly: True
-                    size_hint: (0.3, 0.1)
-                TextInput:
-                    id: mean
-                    readonly: True
-                    size_hint: (0.6, 0.1)
-                TextInput:
-                    id: line
-                    readonly: True
-                    size_hint: (0.1, 0.1)
-                TextInput:
-                    id: median
-                    readonly: True
-                    size_hint: (0.3, 0.1)
-                TextInput:
-                    id: mean
-                    readonly: True
-                    size_hint: (0.6, 0.1)
-                TextInput:
-                    id: line
-                    readonly: True
-                    size_hint: (0.1, 0.1)
-                TextInput:
-                    id: median
-                    readonly: True
-                    size_hint: (0.3, 0.1)
-                TextInput:
-                    id: mean
-                    readonly: True
-                    size_hint: (0.6, 0.1)
-
+            BoxLayout:
+                id:body
 
             Button:
                 id: download_datatable

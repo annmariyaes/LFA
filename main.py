@@ -1,12 +1,12 @@
 import cv2
 import csv
 import numpy as np
-from PIL import Image, ImageDraw
+from PIL import Image
 
 from skimage.color import rgb2gray
 from skimage.filters import threshold_li, threshold_yen, threshold_otsu, threshold_isodata, threshold_triangle
 
-from kivy.app import App
+from kivy.metrics import dp
 from kivy.lang import Builder
 from kivy.uix.popup import Popup
 from kivy.core.window import Window
@@ -14,15 +14,17 @@ from kivy.utils import get_color_from_hex
 from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.properties import ObjectProperty, StringProperty
 
+from kivymd.app import MDApp
+from kivymd.uix.datatables import MDDataTable
+
 
 from skimage import io
+from kivy.app import App
 from matplotlib import cm
-from kivy.metrics import dp
-from kivymd.app import MDApp
 from kivymd.uix.screen import Screen
-from kivymd.uix.datatables import MDDataTable
-from kivy.core.image import Image as CoreImage
+from kivymd.color_definitions import colors
 from kivy.uix.anchorlayout import AnchorLayout
+from kivy.core.image import Image as CoreImage
 
 
 
@@ -86,7 +88,7 @@ class Tab(TabbedPanel):
         global lines, nlines
         print("button pressed")
         # convert image into grayscale
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(imgCrop, cv2.COLOR_BGR2GRAY)
 
         # threshold the image to reveal white regions in the image
         thresh = cv2.threshold(gray, 100, 255, cv2.THRESH_OTSU)[1]
@@ -98,11 +100,11 @@ class Tab(TabbedPanel):
         lines = cv2.HoughLinesP(edges, 1, np.pi / 180, 50, minLineLength=50, maxLineGap=100)
         for line in lines:
             x1, y1, x2, y2 = line[0]
-            cv2.line(img, (x1, y1), (x2, y2), (255, 0, 0), 3)
+            cv2.line(imgCrop, (x1, y1), (x2, y2), (255, 0, 0), 3)
         nlines = len(lines)/2
 
         # Display of detected image
-        cv2.imwrite('detected_image.jpg', img)
+        cv2.imwrite('detected_image.jpg', imgCrop)
         self.ids.detected_image.source = 'detected_image.jpg'
         # Display of number of lines in the detected image
 
@@ -126,7 +128,7 @@ class Tab(TabbedPanel):
 
             elif conv == "Red":
                 print("Hi")
-                pil_img = Image.fromarray(img).convert('RGB')
+                pil_img = Image.fromarray(imgCrop).convert('RGB')
                 # Split into 3 channels
                 r, g, b = pil_img.split()
                 # Increase Reds
@@ -142,7 +144,7 @@ class Tab(TabbedPanel):
 
             elif conv == "Green":
                 print("Hihi")
-                pil_img = Image.fromarray(img).convert('RGB')
+                pil_img = Image.fromarray(imgCrop).convert('RGB')
                 # Split into 3 channels
                 r, g, b = pil_img.split()
                 # Decrease Reds
@@ -158,7 +160,7 @@ class Tab(TabbedPanel):
 
             elif conv == "Blue":
                 print("Hihihi")
-                pil_img = Image.fromarray(img).convert('RGB')
+                pil_img = Image.fromarray(imgCrop).convert('RGB')
                 # Split into 3 channels
                 r, g, b = pil_img.split()
                 # Decrease Reds
@@ -232,9 +234,8 @@ class Tab(TabbedPanel):
             pass
 
 
-
     def slide_it(self, *args):
-        global l,s, mean, median
+        global l, s, mean, median
 
         self.slide_text.text = str(int(args[1]))
         offset = int(args[1])
@@ -251,7 +252,7 @@ class Tab(TabbedPanel):
         for i in range(0, len(s)):
             if (i % 2 == 0):
                 # accessing the pixel values by its row and columns
-                points = img[((s[i][1]) - offset):((s[i + 1][3]) + offset), s[i][0]:s[i + 1][2]]  # points = img1[y1:y2, x1:x2] Eg:[168:190, 16:148]
+                points = imgCrop[((s[i][1])-offset) : ((s[i+1][3])+offset), s[i][0] : s[i+1][2]]  # points = img1[y1:y2, x1:x2] Eg:[168:190, 16:148]
 
                 # Their respective median and mean
                 n = (len(s)) / 2
@@ -259,18 +260,9 @@ class Tab(TabbedPanel):
                 m2 = np.median(points)
                 mean.append(m1)
                 median.append(m2)
-        #print("Median of the", n, "lines:", median)
-        #print("Mean of the", n, "lines:", mean)
-
-        self.ids.line0.text = f'{1}'
-        self.ids.median0.text = f'{median[0]}'
-        self.ids.mean0.text = f'{mean[0]}'
-        self.ids.line1.text = f'{2}'
-        self.ids.median1.text = f'{median[1]}'
-        self.ids.mean1.text = f'{mean[1]}'
-        self.ids.line2.text = f'{3}'
-        self.ids.median2.text = f'{median[2]}'
-        self.ids.mean2.text = f'{mean[2]}'
+        print("Median of the", n, "lines:", median)
+        print("Mean of the", n, "lines:", mean)
+        #datatable_list.append((mean[0], median[0]))
 
 
 
@@ -287,10 +279,42 @@ class Tab(TabbedPanel):
             #csvappend.writerows([p for p in zip(median, mean)])
 
 
+
+    def datatable(self, *args):
+        self.table = MDDataTable(pos_hint = {'center_x': 0.5, 'center_y': 0.5},
+                                 size_hint = (1, 0.95),
+                                 use_pagination = True,
+                                 check = True,
+                                 rows_num = 10,
+                                 column_data = [("Lines", dp(30)),
+                                            ("File", dp(40)),
+                                            ("Mean", dp(50)),
+                                            ("Median", dp(50))],
+                                 row_data = [(1, "lines0.jpg", 158.75674755214985, 177.0),
+                                            (2, "lines0.jpg", 158.58433333333332, 177.0),
+                                            (3, "lines0.jpg", 158.34529228023203, 176.0)],
+                                 )
+        self.table.bind(on_row_press = self.on_row_press)
+        self.table.bind(on_check_press = self.on_check_press)
+        self.ids.body.add_widget(self.table)
+
+
+    def on_row_press(self, instance_table, instance_row):
+        print(instance_table, instance_row)
+
+    def on_check_press(self, instance_table, current_row):
+        print(instance_table, current_row)
+
+
+
 class Assays(MDApp):
     def build(self):
+        self.theme_cls.primary_palette = "Teal"
+        self.theme_cls.primary_hue = "500"
+        self.theme_cls.theme_style = "Dark"
         return Tab()
 
 
 if __name__ == '__main__':
     Assays().run()
+
