@@ -235,7 +235,7 @@ class Tab(TabbedPanel):
 
 
     def slide_it(self, *args):
-        global l, s, mean, median
+        global l, s, n, mean, median
 
         self.slide_text.text = str(int(args[1]))
         offset = int(args[1])
@@ -287,12 +287,11 @@ class Tab(TabbedPanel):
                                  check = True,
                                  rows_num = 10,
                                  column_data = [("Lines", dp(30)),
-                                            ("File", dp(40)),
-                                            ("Mean", dp(50)),
-                                            ("Median", dp(50))],
-                                 row_data = [(1, "lines0.jpg", 158.75674755214985, 177.0),
-                                            (2, "lines0.jpg", 158.58433333333332, 177.0),
-                                            (3, "lines0.jpg", 158.34529228023203, 176.0)],
+                                            ("File name", dp(60)),
+                                            ("Mean", dp(40)),
+                                            ("Median", dp(30))],
+                                 row_data = [(f"{j + 1}", self.file_path, mean[j], median[j])
+                                             for j in range(int(n))],
                                  )
         self.table.bind(on_row_press = self.on_row_press)
         self.table.bind(on_check_press = self.on_check_press)
