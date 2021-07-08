@@ -266,32 +266,21 @@ class Tab(TabbedPanel):
 
 
 
-    def download(self, *args):
-        # stores values of first image
-        with open("C:\\Users\\annma\\OneDrive\\Desktop\\Assay Project\\Data Table.csv", 'w') as csvfile:
-            csvwriter = csv.writer(csvfile)
-            csvwriter.writerow(["Median", "Mean"])
-            csvwriter.writerows([p for p in zip(median, mean)])
-
-        # stores values from second image
-        #with open("C:\\Users\\annma\\OneDrive\\Desktop\\Assay Project\\Data Table.csv", 'a+') as appendobj:
-            #csvappend = csv.writer(appendobj)
-            #csvappend.writerows([p for p in zip(median, mean)])
-
-
-
     def datatable(self, *args):
         self.table = MDDataTable(pos_hint = {'center_x': 0.5, 'center_y': 0.5},
                                  size_hint = (1, 0.95),
                                  use_pagination = True,
                                  check = True,
                                  rows_num = 10,
-                                 column_data = [("Lines", dp(30)),
-                                            ("File name", dp(60)),
-                                            ("Mean", dp(40)),
-                                            ("Median", dp(30))],
-                                 row_data = [(f"{j + 1}", self.file_path, mean[j], median[j])
-                                             for j in range(int(n))],
+                                 column_data = [("File name", dp(70)),
+                                                ("Lines", dp(20)),
+                                                ("Mean", dp(40)),
+                                                ("Median", dp(30))],
+                                 row_data = [(self.file_path,
+                                              f"{j + 1}",
+                                              mean[j],
+                                              median[j])
+                                    for j in range(int(n))],
                                  )
         self.table.bind(on_row_press = self.on_row_press)
         self.table.bind(on_check_press = self.on_check_press)
@@ -303,6 +292,20 @@ class Tab(TabbedPanel):
 
     def on_check_press(self, instance_table, current_row):
         print(instance_table, current_row)
+
+
+
+    def download(self, *args):
+        # stores values of first image
+        with open("C:\\Users\\annma\\OneDrive\\Desktop\\Assay Project\\Data Table.csv", 'w') as csvfile:
+            csvwriter = csv.writer(csvfile)
+            csvwriter.writerow(["Median", "Mean"])
+            csvwriter.writerows([p for p in zip(median, mean)])
+
+        # stores values from second image
+        #with open("C:\\Users\\annma\\OneDrive\\Desktop\\Assay Project\\Data Table.csv", 'a+') as appendobj:
+            #csvappend = csv.writer(appendobj)
+            #csvappend.writerows([p for p in zip(median, mean)])
 
 
 
