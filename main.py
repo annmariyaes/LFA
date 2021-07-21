@@ -84,6 +84,8 @@ class Tab(TabbedPanel):
 
 
 
+
+    # detection of how many lines are in the image
     def detect_lines(self):
         global lines, nlines
         print("button pressed")
@@ -115,6 +117,7 @@ class Tab(TabbedPanel):
 
 
 
+    # dropdown for the color conversion(gray, luminance, red, green, blue
     def spinner_clicked(self, value):
         global conversion
 
@@ -182,7 +185,7 @@ class Tab(TabbedPanel):
 
 
 
-    #np_img = np.array(il_img)
+    # check-box for the thresholding methods (Li, Yen, Otsu, Isodata, Triangle)
     checks = []
     def checkbox_clicked(self, instance, value, threshold):
 
@@ -234,6 +237,7 @@ class Tab(TabbedPanel):
             pass
 
 
+    # offset to the increase the area of cropped image for better calculations
     def slide_it(self, *args):
         global l, s, n, mean, median
 
@@ -266,6 +270,7 @@ class Tab(TabbedPanel):
 
 
 
+    # datatable for median and mean of image
     def datatable(self, *args):
         self.table = MDDataTable(pos_hint = {'center_x': 0.5, 'center_y': 0.5},
                                  size_hint = (1, 0.95),
