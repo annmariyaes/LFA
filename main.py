@@ -70,7 +70,6 @@ class Tab(TabbedPanel):
 
 
 
-
     # Detection of how many lines are in the image
     def detect_lines(self):
         global lines, nlines
