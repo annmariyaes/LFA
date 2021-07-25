@@ -113,7 +113,7 @@ class Tab(TabbedPanel):
                 return rgb2gray(img)
 
             elif conv == "Red":
-                pil_img = Image.fromarray(imgCrop).convert('RGB')
+                pil_img = Image.fromarray(img).convert('RGB')
                 # Split into 3 channels
                 r, g, b = pil_img.split()
                 # Increase Reds
@@ -128,7 +128,7 @@ class Tab(TabbedPanel):
                 return np_img
 
             elif conv == "Green":
-                pil_img = Image.fromarray(imgCrop).convert('RGB')
+                pil_img = Image.fromarray(img).convert('RGB')
                 # Split into 3 channels
                 r, g, b = pil_img.split()
                 # Decrease Reds
@@ -143,7 +143,7 @@ class Tab(TabbedPanel):
                 return np_img
 
             elif conv == "Blue":
-                pil_img = Image.fromarray(imgCrop).convert('RGB')
+                pil_img = Image.fromarray(img).convert('RGB')
                 # Split into 3 channels
                 r, g, b = pil_img.split()
                 # Decrease Reds
