@@ -14,11 +14,30 @@ Annmariya Elayanithottathil
 
 ## Description
 
-The LFA Python App consists of mainly 3 parts:
+The LFA Python App consists of mainly 3 tabs:
 
-The Band detection module
+1. Band automatic detection which works mainly with the help of Hough line transform using OpenCV package
+
+2. Background correction with different color conversion and thresholding methods.
+
+3. Intensity data which creates datatable containing details like number of bands in that image and their respective mean and median. 
 
 ## Installation
 
+
+
 ## User's Guide
 
+After installing the packages, run the main.py code.
+
+In the first tab, firstly upload the LFA image from your folder. 
+Then hit the "Apply Crop" button, which opens up a ROI window, crop the image without including the shadow regions. 
+Again a new window popups up. Close both windows and return to the LFA app. 
+Next hit the "Apply detection" button, then the app displays the cropped band-detected image and also the in the next box the number of lines detected from that image.
+
+Coming to the second tab, select the color conversion method from the dropdown options(Gray, Luminance, Red, Green, Blue).
+Then select any thresholding methods like OTSU, Li, Yen, Isodata, Triangle.
+For increasing the area for the better calculation of median and mean of the image, set an offset value(preferably 20).
+
+In the last tab, click "Create datatable" button, which will turn to a datatable containing intensity data and other related details of the detected-bands.
+Lastly download datatable, if you want to store the information of the uploaded image. 
