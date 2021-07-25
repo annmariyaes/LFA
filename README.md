@@ -17,15 +17,15 @@ Annmariya Elayanithottathil
 
 The LFA Python App consists of mainly 3 tabs:
 
-1. Band automatic detection which works mainly with the help of Hough line transform using OpenCV package
+1. **_Band automatic detection_** which works mainly with the help of Hough line transform using OpenCV package
 
-2. Background correction with different color conversion and thresholding methods.
+2. **_Background correction_** with different color conversion and thresholding methods.
 
-3. Intensity data which creates datatable containing details like number of bands in that image and their respective mean and median. 
+3. **_Intensity data_** which creates datatable containing details like number of bands in that image and their respective mean and median. 
 
 ## Installation
 
-
+csv, cv2, numpy, PIL, skimage, kivy, kivyMD
 
 ## User's Guide
 
