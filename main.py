@@ -75,7 +75,7 @@ class Tab(TabbedPanel):
         global lines, nlines
 
         # Convert image into grayscale
-        gray = cv2.cvtColor(imgCrop, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         # Threshold the image to reveal white regions in the image
         thresh = cv2.threshold(gray, 100, 255, cv2.THRESH_OTSU)[1]
@@ -87,11 +87,11 @@ class Tab(TabbedPanel):
         lines = cv2.HoughLinesP(edges, 1, np.pi / 180, 50, minLineLength=50, maxLineGap=100)
         for line in lines:
             x1, y1, x2, y2 = line[0]
-            cv2.line(imgCrop, (x1, y1), (x2, y2), (255, 0, 0), 3)
+            cv2.line(img, (x1, y1), (x2, y2), (255, 0, 0), 3)
         nlines = len(lines)/2
 
         # Display the lines-detected image
-        cv2.imwrite('detected_image.jpg', imgCrop)
+        cv2.imwrite('detected_image.jpg', img)
         self.ids.detected_image.source = 'detected_image.jpg'
 
         # Only integer values are allowed to be the number of lines
@@ -234,7 +234,7 @@ class Tab(TabbedPanel):
         for i in range(0, len(s)):
             if (i % 2 == 0):
                 # Accessing the pixel values by its row and columns
-                points = imgCrop[((s[i][1])-offset) : ((s[i+1][3])+offset), s[i][0] : s[i+1][2]]  # points = img1[y1:y2, x1:x2] Eg:[168:190, 16:148]
+                points = img[((s[i][1])-offset) : ((s[i+1][3])+offset), s[i][0] : s[i+1][2]]  # points = img1[y1:y2, x1:x2] Eg:[168:190, 16:148]
 
                 # Their respective median and mean
                 n = (len(s)) / 2

@@ -50,3 +50,5 @@ In the last tab, click "Create datatable" button, which will turn to a datatable
 Lastly download datatable, if you want to store the information of the uploaded image. 
 
 <img width="401" alt="tab3" src="https://user-images.githubusercontent.com/75450699/126910032-fde9ad71-17ec-4f77-ac25-11993e6a6f8a.png">
+
+ 
