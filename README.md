@@ -18,25 +18,46 @@ The LFA Python App consists of mainly 3 tabs:
 ## Creating Virtual Environment
 
 1. Open the directory: 
-   ```cd LFAApp_git```
+   
+   Windows/Unix/macOS: ```cd LFAApp_git```
    
 
 2. In order to create the new virtual environment enter the command:
-    ```python -m venv project_env```.
+   
+   Windows: ```python -m venv project_env```
+   
+   Unix/macOS: ```python3 -m venv project_env```
+   
     This will create a new virtual environment named “project_env”.
 
+
 3. Once the environment is created, you can activate the environment using the command:
-    ```project_env\Scripts\activate.bat```
+   
+   Windows: ```project_env\Scripts\activate.bat```
+   
+   Unix/macOS: ```project_env/bin/activate```
+   
 
 4. Use requirements.txt file for a new person to install all dependencies.
-    ```pip install -r /path/to/requirements.txt```. To check, if all the packages and dependencies are successfully installed, use the command: 
-   ```pip freeze```
+      
+   Windows: ```pip install -r /path/to/requirements.txt```
    
+   Unix/macOS: ```python3 -m pip install -r requirements.txt```
+   
+   To check, if all the packages and dependencies are successfully installed, use the command: 
+   Windows/Unix/macOS: ```pip freeze```
+   
+
 5. To deactivate the directory:
-    ```deactivate```
+
+   Windows/Unix/macOS: ```deactivate```
+
 
 6. To delete or remove directory:
-    ```rmdir project_env /s```
+   
+   Windows: ```rmdir project_env /s```
+   
+   Unix/macOS: ```rm -r project_env```
 
 
 ## User's Guide
