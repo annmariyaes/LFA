@@ -1,5 +1,5 @@
 
-# README for LFAApp
+# LFA Python App
 
 A readme for the python-based Application that analyse the Lateral Flow Assay images and quantify their bands/spots.
 
