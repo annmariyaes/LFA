@@ -23,9 +23,36 @@ The LFA Python App consists of mainly 3 tabs:
 
 3. **_Intensity data_** which creates datatable containing details like number of bands in that image and their respective mean and median. 
 
-## Installation
+## Creating Virtual Environment
 
-csv, cv2, numpy, PIL, skimage, kivy, kivyMD
+1. Open the directory: 
+   
+    _cd LFAApp_git_ 
+
+2. In order to create the new virtual environment enter the command:
+
+    _python -m venv project_env_
+
+    This will create a new virtual environment named “project_env”.
+
+3. Once the environment is created, you can activate the environment using the command:
+   
+    _project_env\Scripts\activate.bat_
+
+4. Use requirements.txt file for a new person to install all dependencies. This can be easily done with the command: _pip freeze_
+   
+    _pip install -r requirements.txt_
+   
+5. To deactivate the directory:
+   
+    _deactivate_
+
+6. To delete or remove directory:
+   
+    _rmdir project_env /s_
+
+
+
 
 ## User's Guide
 
