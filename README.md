@@ -4,15 +4,6 @@
 A readme for the python-based Application that analyse the Lateral Flow Assay images and quantify their bands/spots.
 
 
-## Contributors
-
-Matthias Kohl, Filip Paskali, Weronica Schary
-
-## License and Copyright
-
-Annmariya Elayanithottathil
-
-
 ## Description
 
 The LFA Python App consists of mainly 3 tabs:
@@ -22,6 +13,7 @@ The LFA Python App consists of mainly 3 tabs:
 2. **_Background correction_** with different color conversion and thresholding methods.
 
 3. **_Intensity data_** which creates datatable containing details like number of bands in that image and their respective mean and median. 
+
 
 ## Creating Virtual Environment
 
@@ -39,9 +31,13 @@ The LFA Python App consists of mainly 3 tabs:
    
     _project_env\Scripts\activate.bat_
 
-4. Use requirements.txt file for a new person to install all dependencies. This can be easily done with the command: _pip freeze_
+4. Use requirements.txt file for a new person to install all dependencies. 
    
-    _pip install -r requirements.txt_
+    _pip install -r /path/to/requirements.txt_
+
+    To check, if all the packages and dependencies are successfully installed, use the command: 
+   
+   _pip freeze_
    
 5. To deactivate the directory:
    
@@ -50,8 +46,6 @@ The LFA Python App consists of mainly 3 tabs:
 6. To delete or remove directory:
    
     _rmdir project_env /s_
-
-
 
 
 ## User's Guide
