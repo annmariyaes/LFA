@@ -5,7 +5,6 @@
     size_hint: (0.99, 0.99)
     tab_pos: 'top_mid'
     tab_width: 265
-    slide_text: slider
     MDProgressBar:
         value: 50
 
@@ -44,19 +43,6 @@
 
 
             Label:
-                text: 'Crop the image'
-                size_hint: (0.3, 0.5)
-            Button:
-                id: crops
-                text: 'Apply cropping'
-                size_hint: 0.3, 0.3
-                on_press: root.mouse_crop()
-            Label:
-                text: ''
-                size_hint_x: 1
-
-
-            Label:
                 text: 'Lines detection'
                 size_hint: (0.3, 0.5)
             Button:
@@ -69,7 +55,6 @@
                 size_hint_x: 1
             Image:
                 id: detected_image
-                source: '<random_name>.jpg'
                 size_hint_y: 10
             Label:
                 text: ''
@@ -109,7 +94,7 @@
                 size_hint_x: 0.4
             Spinner:
                 id: spinner_id
-                text: "Conversion Method"
+                text: "Gray"
                 values: ['Gray', 'Luminance', 'Red', 'Green', 'Blue']
                 on_text: root.spinner_clicked(spinner_id.text)
                 size_hint_x: 0.5
@@ -150,29 +135,30 @@
                     text: 'Li'
                     size_hint_x: 1
                 CheckBox:
+                    active: True
                     group: 'thresholding methods'
-                    on_active: root.checkbox_clicked(self, self.active, 'Li')
+                    on_active: root.set_thresh_method('Li')
                 Label:
                     text: 'Yen'
                     size_hint_x: 1
                 CheckBox:
                     group: 'thresholding methods'
-                    on_active: root.checkbox_clicked(self, self.active, 'Yen')
+                    on_active: root.set_thresh_method('Yen')
                 Label:
                     text: 'Otsu'
                 CheckBox:
                     group: 'thresholding methods'
-                    on_active: root.checkbox_clicked(self, self.active, 'Otsu')
+                    on_active: root.set_thresh_method('Otsu')
                 Label:
                     text: 'Isodata'
                 CheckBox:
                     group: 'thresholding methods'
-                    on_active: root.checkbox_clicked(self, self.active, 'Isodata')
+                    on_active: root.set_thresh_method('Isodata')
                 Label:
                     text: 'Triangle'
                 CheckBox:
                     group: 'thresholding methods'
-                    on_active: root.checkbox_clicked(self, self.active, 'Triangle')
+                    on_active: root.set_thresh_method('Triangle')
 
             Label:
                 text: ''
@@ -184,15 +170,19 @@
                 text: 'Choose offset value'
                 size_hint_x: .3
             MDSlider:
+                id: offset_slider
                 min: 0
                 max: 50
                 value: 20
                 orientation: 'horizontal'
                 size_hint_x: .7
-                on_value: root.slide_it(*args)
-            Label:
-                id: slider
-                text: '0'
+                on_value: root.set_offset(offset_slider.value)
+
+            Button:
+                id: crops
+                text: 'Apply background correction'
+                size_hint: 0.3, 0.3
+                on_press: root.apply_background_correction()
 
 
 ##########################################################################

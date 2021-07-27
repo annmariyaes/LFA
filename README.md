@@ -15,7 +15,7 @@ The LFA Python App consists of mainly 3 tabs:
 3. **_Intensity data_** which creates datatable containing details like number of bands in that image and their respective mean and median. 
 
 
-## Creating Virtual Environment
+## Creating a Virtual Environment
 
 1. Open the directory: 
    
