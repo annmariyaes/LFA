@@ -220,20 +220,20 @@ class Tab(TabbedPanel):
 
     # Datatable for median and mean of selected image
     def datatable(self, *args):
-        self.table = MDDataTable(pos_hint={'center_x': 0.5, 'center_y': 0.5},
-                                 size_hint=(1, 0.95),
-                                 use_pagination=True,
-                                 check=True,
-                                 rows_num=10,
-                                 column_data=[("File name", dp(70)),
-                                              ("Lines", dp(20)),
+        self.table = MDDataTable(pos_hint = {'center_x': 0.5, 'center_y': 0.5},
+                                 size_hint = (1, 0.95),
+                                 use_pagination = True,
+                                 check = True,
+                                 rows_num = 5,
+                                 column_data = [("File name", dp(90)),
+                                              ("Lines", dp(10)),
                                               ("Mean", dp(40)),
                                               ("Median", dp(30))],
-                                 row_data=[(self.file_path.split("/")[-1],
+                                 row_data = [(self.file_path.split("/")[-1],
                                             f"{j + 1}",
                                             self.mean[j],
                                             self.median[j])
-                                           for j in range(int(len(self.lines) / 2))],
+                                           for j in range(int(len(self.lines)/2))],
                                  )
 
         self.table.bind(on_row_press=self.on_row_press)
