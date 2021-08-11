@@ -11,6 +11,8 @@ from kivy.lang import Builder
 from kivy.uix.popup import Popup
 from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.properties import ObjectProperty, StringProperty
+from kivy.config import Config
+Config.set('graphics', 'resizable', True)
 
 # KivyMD is a collection of Material Design compliant widgets for use with, Kivy cross-platform graphical framework
 from kivymd.app import MDApp
@@ -252,7 +254,8 @@ class Tab(TabbedPanel):
             csvwriter = csv.writer(csvfile)
             csvwriter.writerow(["File name", "Line", "Median", "Mean"])
             csvwriter.writerows([p for p in
-                                 zip([self.file_path.split("/")[-1]] * len(self.median), range(1, len(self.median) + 1),
+                                 zip([self.file_path.split("/")[-1]] * len(self.median),
+                                     range(1, len(self.median) + 1),
                                      self.median, self.mean)])
 
 
