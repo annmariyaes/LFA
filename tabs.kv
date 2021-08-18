@@ -4,7 +4,7 @@
     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
     size_hint: (0.99, 0.99)
     tab_pos: 'top_mid'
-    tab_width: 265
+    tab_width: root.width/3
     MDProgressBar:
         value: 50
 
@@ -41,6 +41,37 @@
                 text: ''
                 size_hint_x: 1
 
+            AnchorLayout:
+                anchor_x: 'left'
+                anchor_y: 'top'
+                ScrollView:
+                    id:scroll
+                    do_scroll_x: True
+                    do_scroll_y: True
+                    size_hint_y: 5
+                    Photo:
+                        Image:
+                            id: crop_image
+                            size_hint_y: 5
+                            keep_ration: True
+                            size: self.texture_size
+                            keep_data: True
+            Label:
+                text: ''
+                size_hint_x: 1
+            Label:
+                text: ''
+                size_hint_x: 1
+            Label:
+                text: ''
+                size_hint_x: 1
+            Label:
+                text: ''
+                size_hint_x: 1
+            Label:
+                text: ''
+                size_hint_x: 1
+
 
             Label:
                 text: 'Lines detection'
@@ -55,7 +86,7 @@
                 size_hint_x: 1
             Image:
                 id: detected_image
-                size_hint_y: 10
+                size_hint_y: 5
             Label:
                 text: ''
                 size_hint_x: 1
