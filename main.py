@@ -40,7 +40,6 @@ class Photo(Image):
         self.sb = [0,0]
         self.point = 1
 
-
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
             if touch.is_double_tap:
@@ -111,7 +110,8 @@ class Tab(TabbedPanel):
             self.file_path = 'uncropped_image.jpg'
             cv2.imwrite('uncropped_image.jpg', self.img)
             t = Tab()
-            l = Photo('uncropped_image.jpg')
+            l = Photo(photo='uncropped_image.jpg')
+
             t.add_widget(l)
 
 
