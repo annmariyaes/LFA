@@ -32,10 +32,10 @@ Builder.load_file('tabs.kv')
 
 class Photo(Image):
 
-    def __init__(self, **kwargs):
+    def __init__(self, photo, **kwargs):
         super().__init__(**kwargs)
         print("hi")
-        #self.source = source
+        self.source = photo
 
         self.sb = [0,0]
         self.point = 1
@@ -59,7 +59,7 @@ class Photo(Image):
                 Color(1, 0, 0, mode="rgb")
                 Line(rectangle=pts, width=1)
                 print(pts)
-                self.img = self.source[int(pts[1]):int(pts[1] + pts[3]),int(pts[0]):int(pts[0] + pts[2])]
+
                 cv2.imwrite('cropped_image.jpg', self.img)
                 self.ids.crop_image.source = 'cropped_image.jpg'
 
@@ -110,7 +110,9 @@ class Tab(TabbedPanel):
             self.ids.crop_image.source = self.file_path
             self.file_path = 'uncropped_image.jpg'
             cv2.imwrite('uncropped_image.jpg', self.img)
+            t = Tab()
             l = Photo('uncropped_image.jpg')
+            t.add_widget(l)
 
 
 
