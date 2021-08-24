@@ -63,7 +63,7 @@ class Tab(TabbedPanel):
     # Image cropping
     def mouse_crop(self):
         # Resize the actual size of image to fit the screen properly
-        self.img = cv2.resize(self.img, (2000, 1000))
+        self.img = cv2.resize(self.img, (2500, 1500))
 
         # Selection of Region Of Interest
         roi = cv2.selectROI(self.img, showCrosshair=False)
@@ -255,7 +255,7 @@ class Tab(TabbedPanel):
             csvwriter = csv.writer(csvfile)
             csvwriter.writerow(["File name", "Line", "Median", "Mean"])
             csvwriter.writerows([p for p in
-                                 zip([self.file_path.split("/")[-1]] * len(self.median), range(1, len(self.median) + 1),
+                                 zip([os.path.basename(self.file_path)], range(1, len(self.median) + 1),
                                      self.median, self.mean)])
 
 
