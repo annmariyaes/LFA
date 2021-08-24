@@ -11,8 +11,6 @@ from kivy.lang import Builder
 from kivy.uix.popup import Popup
 from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.properties import ObjectProperty, StringProperty
-from kivy.config import Config
-Config.set('graphics', 'resizable', True)
 
 # KivyMD is a collection of Material Design compliant widgets for use with, Kivy cross-platform graphical framework
 from kivymd.app import MDApp
@@ -222,20 +220,20 @@ class Tab(TabbedPanel):
 
     # Datatable for median and mean of selected image
     def datatable(self, *args):
-        self.table = MDDataTable(pos_hint = {'center_x': 0.5, 'center_y': 0.5},
-                                 size_hint = (1, 0.95),
-                                 use_pagination = True,
-                                 check = True,
-                                 rows_num = 5,
-                                 column_data = [("File name", dp(90)),
-                                              ("Lines", dp(10)),
+        self.table = MDDataTable(pos_hint={'center_x': 0.5, 'center_y': 0.5},
+                                 size_hint=(1, 0.95),
+                                 use_pagination=True,
+                                 check=True,
+                                 rows_num=10,
+                                 column_data=[("File name", dp(70)),
+                                              ("Lines", dp(20)),
                                               ("Mean", dp(40)),
                                               ("Median", dp(30))],
-                                 row_data = [(self.file_path.split("/")[-1],
+                                 row_data=[(self.file_path.split("/")[-1],
                                             f"{j + 1}",
                                             self.mean[j],
                                             self.median[j])
-                                           for j in range(int(len(self.lines)/2))],
+                                           for j in range(int(len(self.lines) / 2))],
                                  )
 
         self.table.bind(on_row_press=self.on_row_press)
@@ -254,8 +252,7 @@ class Tab(TabbedPanel):
             csvwriter = csv.writer(csvfile)
             csvwriter.writerow(["File name", "Line", "Median", "Mean"])
             csvwriter.writerows([p for p in
-                                 zip([self.file_path.split("/")[-1]] * len(self.median),
-                                     range(1, len(self.median) + 1),
+                                 zip([self.file_path.split("/")[-1]] * len(self.median), range(1, len(self.median) + 1),
                                      self.median, self.mean)])
 
 
