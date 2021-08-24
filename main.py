@@ -8,16 +8,11 @@ from skimage.filters import threshold_li, threshold_yen, threshold_otsu, thresho
 
 from kivy.metrics import dp
 from kivy.lang import Builder
-from kivy.graphics import Line
-from kivy.graphics import Color
 from kivy.uix.popup import Popup
-from kivy.uix.image import Image
-from kivy.uix.scrollview import ScrollView
 from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.config import Config
 Config.set('graphics', 'resizable', True)
-
 
 # KivyMD is a collection of Material Design compliant widgets for use with, Kivy cross-platform graphical framework
 from kivymd.app import MDApp
@@ -27,46 +22,8 @@ Builder.load_file('popup.kv')
 Builder.load_file('tabs.kv')
 
 
-
-    # CROPPING
-
-class Photo(Image):
-
-    def __init__(self, photo, **kwargs):
-        super().__init__(**kwargs)
-        print("hi")
-        self.source = photo
-
-        self.sb = [0,0]
-        self.point = 1
-
-    def on_touch_down(self, touch):
-        if self.collide_point(*touch.pos):
-            if touch.is_double_tap:
-                if self.point == 1:
-                    self.sb[0] = list(touch.pos)
-                    self.point = 2
-                elif self.point == 2:
-                    size = touch.pos[0] - self.sb[0][0], touch.pos[1] - self.sb[0][1]
-                    self.sb[1] = list(size)
-                    self.point = 1
-                    self.draw(self.sb[0] + self.sb[1])
-
-    def draw(self, pts):
-        with self.canvas:
-            for box in self.sb:
-                Color(1, 0, 0, mode="rgb")
-                Line(rectangle=pts, width=1)
-                print(pts)
-
-                cv2.imwrite('cropped_image.jpg', self.img)
-                self.ids.crop_image.source = 'cropped_image.jpg'
-
-
-
-
 class FileChoosePopup(Popup):
-    load = ObjectProperty(None)
+    load = ObjectProperty()
 
 
 class Tab(TabbedPanel):
@@ -82,14 +39,12 @@ class Tab(TabbedPanel):
         self.thresh_img = None
         self.offset = 20
         self.lines = None
-        self.crop_image = None
 
         self.mean = []
         self.median = []
 
-
     def open_popup(self):
-        self.the_popup = FileChoosePopup(load = self.load)
+        self.the_popup = FileChoosePopup(load=self.load)
         self.the_popup.open()
 
     def load(self, selection):
@@ -98,23 +53,25 @@ class Tab(TabbedPanel):
         # Check for non-empty list i.e, file selected
         if self.file_path.endswith(".jpg"):
             self.ids.get_file.text = self.file_path
-            self.the_popup.dismiss()
-            print(self.file_path)
 
             # load the image and into grayscale
             self.img = cv2.imread(self.file_path)
             self.the_popup.dismiss()
+            self.mouse_crop()
 
+    # Image cropping
+    def mouse_crop(self):
+        # Resize the actual size of image to fit the screen properly
+        self.img = cv2.resize(self.img, (2500, 1500))
 
-            self.ids.crop_image.source = self.file_path
-            self.file_path = 'uncropped_image.jpg'
-            cv2.imwrite('uncropped_image.jpg', self.img)
-            t = Tab()
-            l = Photo(photo='uncropped_image.jpg')
+        # Selection of Region Of Interest
+        roi = cv2.selectROI(self.img, showCrosshair=False)
 
-            t.add_widget(l)
-
-
+        # Crop image
+        self.img = self.img[int(roi[1]):int(roi[1] + roi[3]), int(roi[0]):int(roi[0] + roi[2])]
+        cv2.imwrite('cropped_image.jpg', self.img)
+        self.ids.detected_image.source = 'cropped_image.jpg'
+        cv2.destroyAllWindows()
 
     # Detection of how many lines are in the image
     def detect_lines(self):
@@ -302,14 +259,11 @@ class Tab(TabbedPanel):
                                      self.median, self.mean)])
 
 
-
 class Assays(MDApp):
     def build(self):
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.primary_hue = "500"
         self.theme_cls.theme_style = "Dark"
-
-
         return Tab()
 
 
