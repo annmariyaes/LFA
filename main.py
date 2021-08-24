@@ -1,5 +1,6 @@
 import cv2
 import csv
+import os
 import numpy as np
 from PIL import Image
 
@@ -50,7 +51,9 @@ class Tab(TabbedPanel):
 
         # Check for non-empty list i.e, file selected
         if self.file_path.endswith(".jpg"):
-            self.ids.get_file.text = self.file_path
+            # size of actual file path is large, so it doesn't fit the text file box
+            self.ids.get_file.text = os.path.basename(self.file_path)
+            print("file_path")
 
             # load the image and into grayscale
             self.img = cv2.imread(self.file_path)
@@ -60,7 +63,7 @@ class Tab(TabbedPanel):
     # Image cropping
     def mouse_crop(self):
         # Resize the actual size of image to fit the screen properly
-        self.img = cv2.resize(self.img, (2500, 1500))
+        self.img = cv2.resize(self.img, (2000, 1000))
 
         # Selection of Region Of Interest
         roi = cv2.selectROI(self.img, showCrosshair=False)
@@ -229,7 +232,7 @@ class Tab(TabbedPanel):
                                               ("Lines", dp(20)),
                                               ("Mean", dp(40)),
                                               ("Median", dp(30))],
-                                 row_data=[(self.file_path.split("/")[-1],
+                                 row_data=[(os.path.basename(self.file_path),
                                             f"{j + 1}",
                                             self.mean[j],
                                             self.median[j])
