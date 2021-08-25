@@ -41,6 +41,7 @@ class Tab(TabbedPanel):
 
         self.mean = []
         self.median = []
+        self.files = []
 
     def open_popup(self):
         self.the_popup = FileChoosePopup(load=self.load)
@@ -49,11 +50,15 @@ class Tab(TabbedPanel):
     def load(self, selection):
         self.file_path = str(selection[0])
 
+        self.files.append(selection[0])
+        print(self.files)
+
         # Check for non-empty list i.e, file selected
         if self.file_path.endswith(".jpg"):
             # size of actual file path is large, so it doesn't fit the text file box
             self.ids.get_file.text = os.path.basename(self.file_path)
-            print("file_path")
+            #for k in range(len(selection[0])):
+                #print(self.file_path)
 
             # load the image and into grayscale
             self.img = cv2.imread(self.file_path)
@@ -218,6 +223,8 @@ class Tab(TabbedPanel):
                 m2 = np.median(points)
                 self.mean.append(m1)
                 self.median.append(m2)
+
+        print("File name of the", n, "lines:", self.files)
         print("Median of the", n, "lines:", self.mean)
         print("Mean of the", n, "lines:", self.median)
 
@@ -227,16 +234,22 @@ class Tab(TabbedPanel):
                                  size_hint=(1, 0.95),
                                  use_pagination=True,
                                  check=True,
-                                 rows_num=10,
-                                 column_data=[("File name", dp(70)),
+                                 rows_num=5,
+                                 column_data=[
+                                              ("File name", dp(70)),
                                               ("Lines", dp(20)),
                                               ("Mean", dp(40)),
-                                              ("Median", dp(30))],
-                                 row_data=[(os.path.basename(self.file_path),
+                                              ("Median", dp(30))
+                                            ],
+                                 row_data=[((
+                                            os.path.basename(str(self.files[i])),
                                             f"{j + 1}",
                                             self.mean[j],
-                                            self.median[j])
-                                           for j in range(int(len(self.lines) / 2))],
+                                            self.median[j]
+                                            )
+                                           for j in range(len(self.mean)))
+                                            for i in range(len(self.files))
+                                 ],
                                  )
 
         self.table.bind(on_row_press=self.on_row_press)
