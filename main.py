@@ -42,6 +42,7 @@ class Tab(TabbedPanel):
         self.mean = []
         self.median = []
         self.files = []
+        self.nn = []
 
     def open_popup(self):
         self.the_popup = FileChoosePopup(load=self.load)
@@ -120,6 +121,7 @@ class Tab(TabbedPanel):
     def apply_background_correction(self):
         img = self.img
         conv = self.conversion_method
+        global nn
 
         ## CONVERSION
 
@@ -218,18 +220,35 @@ class Tab(TabbedPanel):
                          s[i][0]: s[i + 1][2]]  # points = img1[y1:y2, x1:x2] Eg:[168:190, 16:148]
 
                 # Their respective median and mean
-                n = (len(s)) / 2
+                n = int((len(s)) / 2)
                 m1 = np.mean(points)
                 m2 = np.median(points)
                 self.mean.append(m1)
                 self.median.append(m2)
 
+        print("Mean of the", n, "lines:", self.mean)
+        print("Median of the", n, "lines:", self.median)
         print("File name of the", n, "lines:", self.files)
-        print("Median of the", n, "lines:", self.mean)
-        print("Mean of the", n, "lines:", self.median)
+        self.nn.append(n)
+        print(self.nn)
+
+
 
     # Datatable for median and mean of selected image
     def datatable(self, *args):
+        objlist = []
+        for j in range(len(self.files)):
+            for k in range(len(self.mean)):
+                obj = {
+                    "filename": os.path.basename(self.files[j]),
+                    "lines": f"{k + 1}",
+                    "mean": self.mean[k],
+                    "median": self.median[k],
+                }
+                objlist.append(obj)
+
+            #print(n, self.file_path, self.mean, self.median)
+
         self.table = MDDataTable(pos_hint={'center_x': 0.5, 'center_y': 0.5},
                                  size_hint=(1, 0.95),
                                  use_pagination=True,
@@ -241,15 +260,11 @@ class Tab(TabbedPanel):
                                               ("Mean", dp(40)),
                                               ("Median", dp(30))
                                             ],
-                                 row_data=[((
-                                            os.path.basename(str(self.files[i])),
-                                            f"{j + 1}",
-                                            self.mean[j],
-                                            self.median[j]
+                                 row_data=[(
+                                            i["filename"], i["lines"], i["mean"], i["median"],
                                             )
-                                           for j in range(len(self.mean)))
-                                            for i in range(len(self.files))
-                                 ],
+                                            for i in objlist
+                                          ],
                                  )
 
         self.table.bind(on_row_press=self.on_row_press)
