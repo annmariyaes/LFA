@@ -1,6 +1,7 @@
 import cv2
-import csv
 import os
+import csv
+import pandas as pd
 import numpy as np
 from PIL import Image
 
@@ -38,11 +39,8 @@ class Tab(TabbedPanel):
         self.thresh_img = None
         self.offset = 20
         self.lines = None
-
-
-        self.files = []
-        self.nn = []
         self.objlist = []
+        self.current_row = []
 
     def open_popup(self):
         self.the_popup = FileChoosePopup(load=self.load)
@@ -244,6 +242,7 @@ class Tab(TabbedPanel):
         self.table = MDDataTable(pos_hint={'center_x': 0.5, 'center_y': 0.5},
                                  size_hint=(1, 0.95),
                                  use_pagination=True,
+                                 pagination_menu_height='240dp',
                                  check=True,
                                  rows_num=5,
                                  column_data=[
@@ -270,9 +269,11 @@ class Tab(TabbedPanel):
         print(instance_table, current_row)
 
     def download(self, *args):
-        # Stores values of first image
-        self.table.get_row_checks()
-
+        rows = zip(self.current_row)
+        with open("Datatable.csv", "w") as f:
+            writer = csv.writer(f)
+            for row in rows:
+                writer.writerow(row)
 
 
 class Assays(MDApp):
