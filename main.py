@@ -39,10 +39,10 @@ class Tab(TabbedPanel):
         self.offset = 20
         self.lines = None
 
-        self.mean = []
-        self.median = []
+
         self.files = []
         self.nn = []
+        self.objlist = []
 
     def open_popup(self):
         self.the_popup = FileChoosePopup(load=self.load)
@@ -51,15 +51,10 @@ class Tab(TabbedPanel):
     def load(self, selection):
         self.file_path = str(selection[0])
 
-        self.files.append(selection[0])
-        print(self.files)
-
         # Check for non-empty list i.e, file selected
         if self.file_path.endswith(".jpg"):
             # size of actual file path is large, so it doesn't fit the text file box
             self.ids.get_file.text = os.path.basename(self.file_path)
-            #for k in range(len(selection[0])):
-                #print(self.file_path)
 
             # load the image and into grayscale
             self.img = cv2.imread(self.file_path)
@@ -213,6 +208,9 @@ class Tab(TabbedPanel):
         # Sorts to get the adjacent border lines together in the image
         s = l[np.argsort(l[:, 1])]
 
+
+        self.mean = []
+        self.median = []
         for i in range(0, len(s)):
             if (i % 2 == 0):
                 # Accessing the pixel values by its row and columns
@@ -221,33 +219,27 @@ class Tab(TabbedPanel):
 
                 # Their respective median and mean
                 n = int((len(s)) / 2)
+
                 m1 = np.mean(points)
                 m2 = np.median(points)
                 self.mean.append(m1)
                 self.median.append(m2)
 
-        print("Mean of the", n, "lines:", self.mean)
-        print("Median of the", n, "lines:", self.median)
-        print("File name of the", n, "lines:", self.files)
-        self.nn.append(n)
-        print(self.nn)
+        #print("Mean of the", n, "lines:", self.mean)
+        #print("Median of the", n, "lines:", self.median)
 
 
-
-    # Datatable for median and mean of selected image
+    # Datatable for median and mean of selected images
     def datatable(self, *args):
-        objlist = []
-        for j in range(len(self.files)):
-            for k in range(len(self.mean)):
-                obj = {
-                    "filename": os.path.basename(self.files[j]),
-                    "lines": f"{k + 1}",
-                    "mean": self.mean[k],
-                    "median": self.median[k],
-                }
-                objlist.append(obj)
-
-            #print(n, self.file_path, self.mean, self.median)
+        #for j in range(len(self.files)):
+        for k in range(len(self.mean)):
+            obj = {
+                "filename": os.path.basename(self.file_path),
+                "lines": f"{k + 1}",
+                "mean": self.mean[k],
+                "median": self.median[k],
+            }
+            self.objlist.append(obj)
 
         self.table = MDDataTable(pos_hint={'center_x': 0.5, 'center_y': 0.5},
                                  size_hint=(1, 0.95),
@@ -263,7 +255,7 @@ class Tab(TabbedPanel):
                                  row_data=[(
                                             i["filename"], i["lines"], i["mean"], i["median"],
                                             )
-                                            for i in objlist
+                                            for i in self.objlist
                                           ],
                                  )
 
@@ -279,12 +271,8 @@ class Tab(TabbedPanel):
 
     def download(self, *args):
         # Stores values of first image
-        with open("Data Table.csv", 'w') as csvfile:
-            csvwriter = csv.writer(csvfile)
-            csvwriter.writerow(["File name", "Line", "Median", "Mean"])
-            csvwriter.writerows([p for p in
-                                 zip([os.path.basename(self.file_path)], range(1, len(self.median) + 1),
-                                     self.median, self.mean)])
+        self.table.get_row_checks()
+
 
 
 class Assays(MDApp):
