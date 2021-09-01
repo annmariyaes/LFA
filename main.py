@@ -1,7 +1,6 @@
 import cv2
 import os
 import csv
-import pandas as pd
 import numpy as np
 from PIL import Image
 
@@ -40,7 +39,6 @@ class Tab(TabbedPanel):
         self.offset = 20
         self.lines = None
         self.objlist = []
-        self.current_row = []
 
     def open_popup(self):
         self.the_popup = FileChoosePopup(load=self.load)
@@ -232,10 +230,10 @@ class Tab(TabbedPanel):
         #for j in range(len(self.files)):
         for k in range(len(self.mean)):
             obj = {
-                "filename": os.path.basename(self.file_path),
-                "lines": f"{k + 1}",
-                "mean": self.mean[k],
-                "median": self.median[k],
+                "Filename": os.path.basename(self.file_path),
+                "Lines": f"{k + 1}",
+                "Mean": self.mean[k],
+                "Median": self.median[k],
             }
             self.objlist.append(obj)
 
@@ -252,7 +250,7 @@ class Tab(TabbedPanel):
                                               ("Median", dp(30))
                                             ],
                                  row_data=[(
-                                            i["filename"], i["lines"], i["mean"], i["median"],
+                                            i["Filename"], i["Lines"], i["Mean"], i["Median"],
                                             )
                                             for i in self.objlist
                                           ],
@@ -266,14 +264,18 @@ class Tab(TabbedPanel):
         print(instance_table, instance_row)
 
     def on_check_press(self, instance_table, current_row):
+        self.current_row = current_row
         print(instance_table, current_row)
 
+
+    # downloads checked data values
     def download(self, *args):
-        rows = zip(self.current_row)
-        with open("Datatable.csv", "w") as f:
-            writer = csv.writer(f)
-            for row in rows:
-                writer.writerow(row)
+        csv_columns = ["Filename", "Lines", "Mean", "Median"]
+        with open("Data Table.csv", "w") as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames = csv_columns)
+            writer.writeheader()
+            for data in self.objlist:
+                writer.writerow(data)
 
 
 class Assays(MDApp):
