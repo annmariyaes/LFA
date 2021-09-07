@@ -1,5 +1,5 @@
-import cv2
 import os
+import cv2
 import csv
 import numpy as np
 from PIL import Image
@@ -16,6 +16,8 @@ from kivy.properties import ObjectProperty, StringProperty
 # KivyMD is a collection of Material Design compliant widgets for use with, Kivy cross-platform graphical framework
 from kivymd.app import MDApp
 from kivymd.uix.datatables import MDDataTable
+
+
 
 Builder.load_file('popup.kv')
 Builder.load_file('tabs.kv')
@@ -40,9 +42,11 @@ class Tab(TabbedPanel):
         self.lines = None
         self.objlist = []
 
+
     def open_popup(self):
         self.the_popup = FileChoosePopup(load=self.load)
         self.the_popup.open()
+
 
     def load(self, selection):
         self.file_path = str(selection[0])
@@ -57,6 +61,7 @@ class Tab(TabbedPanel):
             self.the_popup.dismiss()
             self.mouse_crop()
 
+
     # Image cropping
     def mouse_crop(self):
         # Resize the actual size of image to fit the screen properly
@@ -70,6 +75,7 @@ class Tab(TabbedPanel):
         cv2.imwrite('cropped_image.jpg', self.img)
         self.ids.detected_image.source = 'cropped_image.jpg'
         cv2.destroyAllWindows()
+
 
     # Detection of how many lines are in the image
     def detect_lines(self):
@@ -99,23 +105,25 @@ class Tab(TabbedPanel):
         # Display of number of lines in the lines-detected image
         self.ids.lines.text = f'{n}'
 
+
     # Dropdown for the color conversion methods (Gray, Luminance, Red, Green, Blue)
     def spinner_clicked(self, value):
         self.conversion_method = value
 
+
     def set_thresh_method(self, method):
         self.thresh_method = method
+
 
     def set_offset(self, offset):
         self.offset = int(offset)
 
+
     def apply_background_correction(self):
         img = self.img
         conv = self.conversion_method
-        global nn
 
-        ## CONVERSION
-
+        ## Color Conversion
         if conv == "Gray":
             self.converted_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -260,8 +268,10 @@ class Tab(TabbedPanel):
         self.table.bind(on_check_press=self.on_check_press)
         self.ids.body.add_widget(self.table)
 
+
     def on_row_press(self, instance_table, instance_row):
         print(instance_table, instance_row)
+
 
     def on_check_press(self, instance_table, current_row):
         self.current_row = current_row
