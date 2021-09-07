@@ -9,9 +9,14 @@ from skimage.filters import threshold_li, threshold_yen, threshold_otsu, thresho
 
 from kivy.metrics import dp
 from kivy.lang import Builder
+from kivy.graphics import Line
+from kivy.graphics import Color
 from kivy.uix.popup import Popup
+from kivy.uix.scrollview import ScrollView
 from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.properties import ObjectProperty, StringProperty
+from kivy.config import Config
+Config.set('graphics', 'resizable', True)
 
 # KivyMD is a collection of Material Design compliant widgets for use with, Kivy cross-platform graphical framework
 from kivymd.app import MDApp
@@ -21,6 +26,13 @@ from kivymd.uix.datatables import MDDataTable
 
 Builder.load_file('popup.kv')
 Builder.load_file('tabs.kv')
+
+
+    # CROPPING
+
+
+
+
 
 
 class FileChoosePopup(Popup):
@@ -42,6 +54,9 @@ class Tab(TabbedPanel):
         self.lines = None
         self.objlist = []
 
+        self.sb = [0, 0]
+        self.point = 1
+
 
     def open_popup(self):
         self.the_popup = FileChoosePopup(load=self.load)
@@ -59,22 +74,27 @@ class Tab(TabbedPanel):
             # load the image and into grayscale
             self.img = cv2.imread(self.file_path)
             self.the_popup.dismiss()
-            self.mouse_crop()
+
+            self.ids.detected_image.source = self.file_path
 
 
-    # Image cropping
-    def mouse_crop(self):
-        # Resize the actual size of image to fit the screen properly
-        self.img = cv2.resize(self.img, (2500, 1500))
+    def on_touch_down(self, touch):
+        if touch.is_double_tap:
+            if self.point == 1:
+                self.sb[0] = list(touch.pos)
+                self.point = 2
+            elif self.point == 2:
+                size = touch.pos[0] - self.sb[0][0], touch.pos[1] - self.sb[0][1]
+                self.sb[1] = list(size)
+                self.point = 1
+                self.draw(self.sb[0]+self.sb[1])
 
-        # Selection of Region Of Interest
-        roi = cv2.selectROI(self.img, showCrosshair=False)
-
-        # Crop image
-        self.img = self.img[int(roi[1]):int(roi[1] + roi[3]), int(roi[0]):int(roi[0] + roi[2])]
-        cv2.imwrite('cropped_image.jpg', self.img)
-        self.ids.detected_image.source = 'cropped_image.jpg'
-        cv2.destroyAllWindows()
+    def draw(self, points):
+        with self.canvas:
+            for box in self.sb:
+                Color(1,0,0, mode="rgb")
+                Line(rectangle=points, width = 1)
+                print(points)
 
 
     # Detection of how many lines are in the image
