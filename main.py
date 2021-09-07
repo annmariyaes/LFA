@@ -9,8 +9,7 @@ from skimage.filters import threshold_li, threshold_yen, threshold_otsu, thresho
 
 from kivy.metrics import dp
 from kivy.lang import Builder
-from kivy.graphics import Line
-from kivy.graphics import Color
+from kivy.graphics import Line, Color, Rectangle
 from kivy.uix.popup import Popup
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.tabbedpanel import TabbedPanel
@@ -76,6 +75,9 @@ class Tab(TabbedPanel):
             self.the_popup.dismiss()
 
             self.ids.detected_image.source = self.file_path
+            cv2.imwrite('uncropped_image.jpg.jpg', self.img)
+            self.on_touch_down()
+
 
 
     def on_touch_down(self, touch):
@@ -90,11 +92,12 @@ class Tab(TabbedPanel):
                 self.draw(self.sb[0]+self.sb[1])
 
     def draw(self, points):
-        with self.canvas:
+        with self.ids.scroller.canvas:
             for box in self.sb:
-                Color(1,0,0, mode="rgb")
-                Line(rectangle=points, width = 1)
-                print(points)
+                Color(1,0,0, mode = "rgb")
+                Line(rectangle = points, width = 1)
+            print(points)
+
 
 
     # Detection of how many lines are in the image
