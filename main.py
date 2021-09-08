@@ -9,29 +9,52 @@ from skimage.filters import threshold_li, threshold_yen, threshold_otsu, thresho
 
 from kivy.metrics import dp
 from kivy.lang import Builder
-from kivy.graphics import Line, Color, Rectangle
+from kivy.uix.image import Image
 from kivy.uix.popup import Popup
+from kivy.graphics import Line, Color
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.tabbedpanel import TabbedPanel
-from kivy.properties import ObjectProperty, StringProperty
+from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.config import Config
+
 Config.set('graphics', 'resizable', True)
 
 # KivyMD is a collection of Material Design compliant widgets for use with, Kivy cross-platform graphical framework
 from kivymd.app import MDApp
 from kivymd.uix.datatables import MDDataTable
 
-
-
 Builder.load_file('popup.kv')
 Builder.load_file('tabs.kv')
 
 
-    # CROPPING
+# Cropping
+class Photo(ScrollView):
+    the_image = NumericProperty()
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.sb = [0, 0]
+        self.point = 1
 
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            self.size_hint = (None, None)
+            if touch.is_double_tap:
+                if self.point == 1:
+                    self.sb[0] = list(touch.pos)
+                    self.point = 2
+                elif self.point == 2:
+                    size = touch.pos[0] - self.sb[0][0], touch.pos[1] - self.sb[0][1]
+                    self.sb[1] = list(size)
+                    self.point = 1
+                    self.draw(self.sb[0] + self.sb[1])
 
-
+    def draw(self, points):
+        with self.canvas:
+            for box in self.sb:
+                Color(1, 0, 0, mode="rgb")
+                Line(rectangle=points, width=1)
+            print(points)
 
 
 class FileChoosePopup(Popup):
@@ -41,6 +64,7 @@ class FileChoosePopup(Popup):
 class Tab(TabbedPanel):
     file_path = StringProperty("No file chosen")
     the_popup = ObjectProperty(None)
+    the_image = NumericProperty(None)
 
     def __init__(self):
         super().__init__()
@@ -53,14 +77,12 @@ class Tab(TabbedPanel):
         self.lines = None
         self.objlist = []
 
-        self.sb = [0, 0]
-        self.point = 1
-
-
     def open_popup(self):
         self.the_popup = FileChoosePopup(load=self.load)
         self.the_popup.open()
 
+    def image(self):
+        self.the_image = Photo(on_touch_down=self.on_touch_down)
 
     def load(self, selection):
         self.file_path = str(selection[0])
@@ -75,30 +97,11 @@ class Tab(TabbedPanel):
             self.the_popup.dismiss()
 
             self.ids.detected_image.source = self.file_path
-            cv2.imwrite('uncropped_image.jpg.jpg', self.img)
-            self.on_touch_down()
+            cv2.imwrite('uncropped_image.jpg', self.img)
 
-
-
-    def on_touch_down(self, touch):
-        if touch.is_double_tap:
-            if self.point == 1:
-                self.sb[0] = list(touch.pos)
-                self.point = 2
-            elif self.point == 2:
-                size = touch.pos[0] - self.sb[0][0], touch.pos[1] - self.sb[0][1]
-                self.sb[1] = list(size)
-                self.point = 1
-                self.draw(self.sb[0]+self.sb[1])
-
-    def draw(self, points):
-        with self.ids.scroller.canvas:
-            for box in self.sb:
-                Color(1,0,0, mode = "rgb")
-                Line(rectangle = points, width = 1)
-            print(points)
-
-
+            #self.img = cv2.rectangle(self.ids.detected_image, self.sb[0], self.sb[1])
+            #cv2.imwrite('cropped_image.jpg', self.img)
+            #self.ids.detected_image.source = 'cropped_image.jpg'
 
     # Detection of how many lines are in the image
     def detect_lines(self):
@@ -128,19 +131,15 @@ class Tab(TabbedPanel):
         # Display of number of lines in the lines-detected image
         self.ids.lines.text = f'{n}'
 
-
     # Dropdown for the color conversion methods (Gray, Luminance, Red, Green, Blue)
     def spinner_clicked(self, value):
         self.conversion_method = value
 
-
     def set_thresh_method(self, method):
         self.thresh_method = method
 
-
     def set_offset(self, offset):
         self.offset = int(offset)
-
 
     def apply_background_correction(self):
         img = self.img
@@ -235,7 +234,6 @@ class Tab(TabbedPanel):
         # Sorts to get the adjacent border lines together in the image
         s = l[np.argsort(l[:, 1])]
 
-
         self.mean = []
         self.median = []
         for i in range(0, len(s)):
@@ -252,13 +250,12 @@ class Tab(TabbedPanel):
                 self.mean.append(m1)
                 self.median.append(m2)
 
-        #print("Mean of the", n, "lines:", self.mean)
-        #print("Median of the", n, "lines:", self.median)
-
+        # print("Mean of the", n, "lines:", self.mean)
+        # print("Median of the", n, "lines:", self.median)
 
     # Datatable for median and mean of selected images
     def datatable(self, *args):
-        #for j in range(len(self.files)):
+        # for j in range(len(self.files)):
         for k in range(len(self.mean)):
             obj = {
                 "Filename": os.path.basename(self.file_path),
@@ -275,37 +272,34 @@ class Tab(TabbedPanel):
                                  check=True,
                                  rows_num=5,
                                  column_data=[
-                                              ("File name", dp(70)),
-                                              ("Lines", dp(20)),
-                                              ("Mean", dp(40)),
-                                              ("Median", dp(30))
-                                            ],
+                                     ("File name", dp(70)),
+                                     ("Lines", dp(20)),
+                                     ("Mean", dp(40)),
+                                     ("Median", dp(30))
+                                 ],
                                  row_data=[(
-                                            i["Filename"], i["Lines"], i["Mean"], i["Median"],
-                                            )
-                                            for i in self.objlist
-                                          ],
+                                     i["Filename"], i["Lines"], i["Mean"], i["Median"],
+                                 )
+                                     for i in self.objlist
+                                 ],
                                  )
 
         self.table.bind(on_row_press=self.on_row_press)
         self.table.bind(on_check_press=self.on_check_press)
         self.ids.body.add_widget(self.table)
 
-
     def on_row_press(self, instance_table, instance_row):
         print(instance_table, instance_row)
-
 
     def on_check_press(self, instance_table, current_row):
         self.current_row = current_row
         print(instance_table, current_row)
 
-
     # downloads checked data values
     def download(self, *args):
         csv_columns = ["Filename", "Lines", "Mean", "Median"]
         with open("Data Table.csv", "w") as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames = csv_columns)
+            writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
             writer.writeheader()
             for data in self.objlist:
                 writer.writerow(data)

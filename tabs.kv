@@ -41,64 +41,34 @@
                 size_hint_x: 1
 
 
+            AnchorLayout:
+                anchor_x: 'center'
+                anchor_y: 'top'
+                Photo:
+                    size_hint_y: 10
+                    ScrollView:
+                        Image:
+                            id: detected_image
+                            size_hint_y: 3.5
+                            size: self.texture_size
+                            keep_ratio: True
+                            keep_data: True
+                            nocache: True
             Label:
-                text: 'Lines detection'
-                size_hint: (0.3, 0.5)
+                text: ''
+                size_hint_y: 10
+
+            Label:
+                text: ''
+                size_hint_x: 0.65
             Button:
                 id: detection
                 text: 'Apply detection'
-                size_hint: 0.3, 0.3
+                size_hint: 0.3, 1
                 on_press: root.detect_lines()
             Label:
                 text: ''
                 size_hint_x: 1
-
-            AnchorLayout:
-                anchor_x: 'left'
-                anchor_y: 'top'
-                ScrollView:
-                    id: scroller
-                    do_scroll_x: True
-                    do_scroll_y: True
-                    size_hint_y: 10
-                    Image:
-                        id: detected_image
-                        size_hint_y: 3
-                        keep_ration: True
-                        size: self.texture_size
-                        keep_data: True
-                        nocache: True
-            Label:
-                text: ''
-                size_hint_x: 1
-            Label:
-                text: ''
-                size_hint_x: 1
-            Label:
-                text: ''
-                size_hint_x: 1
-            Label:
-                text: ''
-                size_hint_x: 1
-            Label:
-                text: ''
-                size_hint_x: 1
-            Label:
-                text: ''
-                size_hint_x: 1
-            Label:
-                text: ''
-                size_hint_x: 1
-            Label:
-                text: ''
-                size_hint_x: 1
-            Label:
-                text: ''
-                size_hint_x: 1
-            Label:
-                text: ''
-                size_hint_x: 1
-
 
             Label:
                 text: 'Number of lines'
@@ -139,32 +109,7 @@
                 size_hint_x: 0.5
             Label:
                 text: ''
-                size_hint_x: 1
-            Label:
-                text: ''
-                size_hint_x: 1
-            Label:
-                text: ''
-                size_hint_x: 1
-            Label:
-                text: ''
-                size_hint_x: 1
-            Label:
-                text: ''
-                size_hint_x: 1
-            Label:
-                text: ''
-                size_hint_x: 1
-            Label:
-                text: ''
-                size_hint_x: 1
-            Label:
-                text: ''
-                size_hint_x: 1
-            Label:
-                text: ''
-                size_hint_x: 1
-
+                size_hint_y: 10
 
             Label:
                 text: 'Pick the suitable thresholding method'
