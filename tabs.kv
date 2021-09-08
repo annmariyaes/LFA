@@ -44,14 +44,17 @@
             AnchorLayout:
                 anchor_x: 'center'
                 anchor_y: 'top'
-                Photo:
+                ScrollView:
+                    id: scroller
+                    do_scroll: True
+                    bar_width: 20
                     size_hint_y: 10
-                    ScrollView:
+                    Photo:
+                        size_hint_y: 10
                         Image:
                             id: detected_image
-                            size_hint_y: 3.5
                             size: self.texture_size
-                            keep_ratio: True
+                            keep_ration: True
                             keep_data: True
                             nocache: True
             Label:

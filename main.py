@@ -28,7 +28,7 @@ Builder.load_file('tabs.kv')
 
 
 # Cropping
-class Photo(ScrollView):
+class Photo(Image):
     the_image = NumericProperty()
 
     def __init__(self, **kwargs):
@@ -55,6 +55,14 @@ class Photo(ScrollView):
                 Color(1, 0, 0, mode="rgb")
                 Line(rectangle=points, width=1)
             print(points)
+            y1 = int(points[0])
+            y2 = int(points[1])
+            x1 = int(points[2])
+            x2 = int(points[3])
+            self.img = self.ids.detected_image[y1:y2, x1:x2]
+            cv2.imwrite('cropped_image.jpg', self.img)
+            self.ids.detected_image.source = 'cropped_image.jpg'
+
 
 
 class FileChoosePopup(Popup):
@@ -99,9 +107,6 @@ class Tab(TabbedPanel):
             self.ids.detected_image.source = self.file_path
             cv2.imwrite('uncropped_image.jpg', self.img)
 
-            #self.img = cv2.rectangle(self.ids.detected_image, self.sb[0], self.sb[1])
-            #cv2.imwrite('cropped_image.jpg', self.img)
-            #self.ids.detected_image.source = 'cropped_image.jpg'
 
     # Detection of how many lines are in the image
     def detect_lines(self):
