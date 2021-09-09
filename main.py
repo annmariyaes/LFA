@@ -55,13 +55,9 @@ class Photo(Image):
                 Color(1, 0, 0, mode="rgb")
                 Line(rectangle=points, width=1)
             print(points)
-            y1 = int(points[0])
-            y2 = int(points[1])
-            x1 = int(points[2])
-            x2 = int(points[3])
-            self.img = self.ids.detected_image[y1:y2, x1:x2]
-            cv2.imwrite('cropped_image.jpg', self.img)
-            self.ids.detected_image.source = 'cropped_image.jpg'
+            #self.img = self.parent.detected_image.source[int(points[0]):int(points[1]), int(points[2]):int(points[3])]
+            #cv2.imwrite('cropped_image.jpg', self.img)
+            #self.ids.detected_image.source = 'cropped_image.jpg'
 
 
 
@@ -320,3 +316,53 @@ class Assays(MDApp):
 
 if __name__ == '__main__':
     Assays().run()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
+-------------------------------------------
+|                                         | 
+|    (x1, y1)                             |
+|      ------------------------           |
+|      |                      |           |
+|      |                      |           | 
+|      |         ROI          |           |  
+|      |                      |           |   
+|      |                      |           |   
+|      |                      |           |       
+|      ------------------------           |   
+|                           (x2, y2)      |    
+|                                         |             
+|                                         |             
+|                                         |             
+-------------------------------------------
+'''

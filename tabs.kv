@@ -39,23 +39,22 @@
             Label:
                 text: ''
                 size_hint_x: 1
-
-
             AnchorLayout:
                 anchor_x: 'center'
                 anchor_y: 'top'
+
                 ScrollView:
                     id: scroller
-                    do_scroll: True
-                    bar_width: 20
-                    size_hint_y: 10
+                    size_hint: (1, 10)
+                    do_scroll: (True, True)
+                    bar_width: 15
                     Photo:
-                        size_hint_y: 10
+                        size_hint: (1, 6)
                         Image:
                             id: detected_image
-                            size: self.texture_size
+                            size_hint: (None, None)
+                            size: (1400, 2500)
                             keep_ration: True
-                            keep_data: True
                             nocache: True
             Label:
                 text: ''
