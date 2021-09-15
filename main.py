@@ -15,8 +15,8 @@ from kivy.graphics import Line, Color
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty
-from kivy.config import Config
 
+from kivy.config import Config
 Config.set('graphics', 'resizable', True)
 
 # KivyMD is a collection of Material Design compliant widgets for use with, Kivy cross-platform graphical framework
@@ -103,10 +103,10 @@ class Tab(TabbedPanel):
 
             #self.img = self.img[int(self.points[0]):int(self.points[1]), int(self.points[2]):int(self.points[3])]
             #self.img = self.img[1300:2200, 1800:1900]
-            self.img = self.img[620:1090, 670:710]
+            #self.img = self.img[620:1090, 670:710]
             #self.img = self.img[1370:1711, 662:712]
-            cv2.imwrite('cropped_image.jpg', self.img)
-            self.ids.detected_image.source = 'cropped_image.jpg'
+            #cv2.imwrite('cropped_image.jpg', self.img)
+            #self.ids.detected_image.source = 'cropped_image.jpg'
 
 
 

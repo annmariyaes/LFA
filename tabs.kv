@@ -48,15 +48,12 @@
                     size_hint: (1, 10)
                     do_scroll: (True, True)
                     bar_width: 15
-                    Photo:
-                        id: cropped_photo
-                        size_hint: (1, 6)
-                        Image:
-                            id: detected_image
-                            size_hint: (None, None)
-                            size: (1400, 2500)
-                            keep_ration: True
-                            nocache: True
+                    Image:
+                        id: detected_image
+                        size_hint: (None, None)
+                        size: self.texture_size
+                        keep_ration: True
+                        nocache: True
 
             Label:
                 text: ''
