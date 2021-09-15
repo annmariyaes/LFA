@@ -49,6 +49,7 @@
                     do_scroll: (True, True)
                     bar_width: 15
                     Photo:
+                        id: cropped_photo
                         size_hint: (1, 6)
                         Image:
                             id: detected_image
@@ -56,6 +57,7 @@
                             size: (1400, 2500)
                             keep_ration: True
                             nocache: True
+
             Label:
                 text: ''
                 size_hint_y: 10
@@ -205,3 +207,6 @@
                 background_color: '#FFFFFF'
                 size_hint: (1, 0.1)
                 on_release: root.download()
+
+
+

@@ -29,7 +29,8 @@ Builder.load_file('tabs.kv')
 
 # Cropping
 class Photo(Image):
-    the_image = NumericProperty()
+    #load2 = ObjectProperty()
+    points = NumericProperty()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -43,11 +44,13 @@ class Photo(Image):
                 if self.point == 1:
                     self.sb[0] = list(touch.pos)
                     self.point = 2
+                    print(touch.pos)
                 elif self.point == 2:
                     size = touch.pos[0] - self.sb[0][0], touch.pos[1] - self.sb[0][1]
                     self.sb[1] = list(size)
                     self.point = 1
                     self.draw(self.sb[0] + self.sb[1])
+                    print(touch.pos)
 
     def draw(self, points):
         with self.canvas:
@@ -55,9 +58,6 @@ class Photo(Image):
                 Color(1, 0, 0, mode="rgb")
                 Line(rectangle=points, width=1)
             print(points)
-            #self.img = self.parent.detected_image.source[int(points[0]):int(points[1]), int(points[2]):int(points[3])]
-            #cv2.imwrite('cropped_image.jpg', self.img)
-            #self.ids.detected_image.source = 'cropped_image.jpg'
 
 
 
@@ -68,7 +68,7 @@ class FileChoosePopup(Popup):
 class Tab(TabbedPanel):
     file_path = StringProperty("No file chosen")
     the_popup = ObjectProperty(None)
-    the_image = NumericProperty(None)
+    #the_image = NumericProperty(None)
 
     def __init__(self):
         super().__init__()
@@ -85,9 +85,6 @@ class Tab(TabbedPanel):
         self.the_popup = FileChoosePopup(load=self.load)
         self.the_popup.open()
 
-    def image(self):
-        self.the_image = Photo(on_touch_down=self.on_touch_down)
-
     def load(self, selection):
         self.file_path = str(selection[0])
 
@@ -102,6 +99,15 @@ class Tab(TabbedPanel):
 
             self.ids.detected_image.source = self.file_path
             cv2.imwrite('uncropped_image.jpg', self.img)
+
+
+            #self.img = self.img[int(self.points[0]):int(self.points[1]), int(self.points[2]):int(self.points[3])]
+            #self.img = self.img[1300:2200, 1800:1900]
+            self.img = self.img[620:1090, 670:710]
+            #self.img = self.img[1370:1711, 662:712]
+            cv2.imwrite('cropped_image.jpg', self.img)
+            self.ids.detected_image.source = 'cropped_image.jpg'
+
 
 
     # Detection of how many lines are in the image
@@ -304,6 +310,11 @@ class Tab(TabbedPanel):
             writer.writeheader()
             for data in self.objlist:
                 writer.writerow(data)
+
+
+#p = Photo()
+#t = Tab()
+#t.photo_owned.load()
 
 
 class Assays(MDApp):
